@@ -16,6 +16,19 @@ class ViewController: NSViewController {
         super.viewDidLoad()
     }
     
+    @IBAction func onDestroyPressed(_ sender: Any) {
+        
+        guard let popoverController = popoverController else {
+            return
+        }
+        
+        if popoverController.popoverIsVisible {
+            popoverController.closePopover(sender)
+        }
+        
+        self.popoverController = nil
+    }
+    
     @IBAction func onButtonPressed(_ sender: Any) {
         
         
@@ -28,14 +41,16 @@ class ViewController: NSViewController {
             //popoverController.borderWidth = 0
             //popoverController.arrowSize = NSSize.zero
             popoverController.animationType = .fadeInOut
-            popoverController.closesWhenApplicationBecomesInactive = true
-            popoverController.closesWhenEscapeKeyPressed = true
+            popoverController.closesWhenApplicationBecomesInactive = false
+            popoverController.closesWhenEscapeKeyPressed = false
+            popoverController.closesWhenPopoverResignsKey = false
+            popoverController.closesWhenGoingOffscreen = true
         }
         
         if popoverController.popoverIsVisible {
             popoverController.closePopover(sender)
         } else {
-            popoverController.presentPopover(from: (sender as! NSView).bounds, in: sender as! NSView, preferredArrowDirection: .down, anchorsToPositionView: true)
+            popoverController.presentPopover(positioningRect: (sender as! NSView).bounds, of: sender as! NSView, preferredArrowDirection: .down, anchorsToPositionView: true)
         }
     }
 
