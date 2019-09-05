@@ -120,13 +120,13 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     //* Whether the popover is currently visible or not *
     
     public var popoverIsVisible: Bool {
-        return popoverWindow.isVisible ?? false
+        return popoverWindow.isVisible
     }
     //* Whether the window can become key or not. Default value: YES *
     
     public var windowCanBecomeKey: Bool {
         get {
-            return popoverWindow.canBecomeKeyWindowOverride ?? false
+            return popoverWindow.canBecomeKeyWindowOverride
         }
         set(windowCanBecomeKey) {
             popoverWindow.canBecomeKeyWindowOverride = windowCanBecomeKey
@@ -217,7 +217,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
      @param sender the object that sent this message
      */
     @IBAction public func closePopover(_ sender: Any) {
-        if !(popoverWindow.isVisible ?? false) {
+        if !popoverWindow.isVisible {
             return
         }
         if (sender is Notification) && ((sender as? Notification)?.name) == NSWindow.didResignKeyNotification/*.isEqual(toString: NSWindow.didResignKeyNotification) != nil*/ {
@@ -329,7 +329,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     
     @objc func applicationDidBecomeActive(_ notification: Notification) {
         // when the user clicks in the parent window for activating the app, the parent window becomes key which prevents 
-        if popoverWindow.isVisible ?? false {
+        if popoverWindow.isVisible {
             perform(#selector(checkPopoverKeyWindowStatus), with: nil, afterDelay: 0)
         }
     }
