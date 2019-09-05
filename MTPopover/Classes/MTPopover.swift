@@ -165,7 +165,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         
         self.positionView = positionView
         viewRect = rect
-        screenRect = positionView.convert(rect, to: nil)// ?? NSRect.zero // Convert the rect to window coordinates
+        screenRect = positionView.convert(rect, to: nil) // Convert the rect to window coordinates
         screenRect.origin = mainWindow.convertToScreen(screenRect).origin // Convert window coordinates to screen coordinates
         let calculatedDirection = calculateArrowDirection(withPreferredArrowDirection: preferredArrowDirection) // Calculate the best arrow direction
         setArrowDirection(calculatedDirection) // Change the arrow direction of the popover
@@ -181,32 +181,33 @@ public class MTPopover: NSObject, CAAnimationDelegate {
             popoverWindow.presentAnimated()
         } else {
             popoverWindow.alphaValue = 1.0
-            if let popoverWindow = popoverWindow {
-                mainWindow.addChildWindow(popoverWindow, ordered: .above)
-            } // Add the popover as a child window of the main window
+            mainWindow.addChildWindow(popoverWindow, ordered: .above) // Add the popover as a child window of the main window
+            
             popoverWindow.makeKeyAndOrderFront(nil) // Show the popover
             callDelegateMethod(#selector(NSPopoverDelegate.popoverDidShow(_:))) // Call the delegate
         }
         
-        let nc = NotificationCenter.default
+        let notificationCenter = NotificationCenter.default
+        
         if anchors {
             // If the anchors option is enabled, register for bounds change notifications
-            nc.addObserver(self, selector: #selector(positionViewBoundsChanged(_:)), name: NSView.boundsDidChangeNotification, object: self.positionView)
+            notificationCenter.addObserver(self, selector: #selector(positionViewBoundsChanged(_:)), name: NSView.boundsDidChangeNotification, object: self.positionView)
             
             // Also listen for frame changed notification
             // NOTE: Could be that just this one is sufficient; review later
             self.positionView?.postsFrameChangedNotifications = true
-            nc.addObserver(self, selector: #selector(positionViewBoundsChanged(_:)), name: NSView.frameDidChangeNotification, object: self.positionView)
+            notificationCenter.addObserver(self, selector: #selector(positionViewBoundsChanged(_:)), name: NSView.frameDidChangeNotification, object: self.positionView)
         }
+        
         // When -closesWhenPopoverResignsKey is set to YES, the popover will automatically close when the popover loses its key status
         if closesWhenPopoverResignsKey {
-            nc.addObserver(self, selector: #selector(closePopover(_:)), name: NSWindow.didResignKeyNotification, object: popoverWindow)
+            notificationCenter.addObserver(self, selector: #selector(closePopover(_:)), name: NSWindow.didResignKeyNotification, object: popoverWindow)
             if !closesWhenApplicationBecomesInactive {
-                nc.addObserver(self, selector: #selector(NSApplicationDelegate.applicationDidBecomeActive(_:)), name: NSApplication.didBecomeActiveNotification, object: nil)
+                notificationCenter.addObserver(self, selector: #selector(NSApplicationDelegate.applicationDidBecomeActive(_:)), name: NSApplication.didBecomeActiveNotification, object: nil)
             }
         } else if closesWhenApplicationBecomesInactive {
             // this is only needed if closesWhenPopoverResignsKey is NO, otherwise we already get a "resign key" notification when resigning active
-            nc.addObserver(self, selector: #selector(closePopover(_:)), name: NSApplication.didResignActiveNotification, object: nil)
+            notificationCenter.addObserver(self, selector: #selector(closePopover(_:)), name: NSApplication.didResignActiveNotification, object: nil)
         }
     }
     
