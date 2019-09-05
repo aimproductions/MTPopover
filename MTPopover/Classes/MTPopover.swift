@@ -263,7 +263,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     @IBAction public func performClose(_ sender: Any = NSNull()) {
         guard popoverWindow.isVisible && !isClosing else { return }
         
-        if (sender is Notification) && ((sender as? Notification)?.name) == NSWindow.didResignKeyNotification {
+        if (sender as? Notification)?.name == NSWindow.didResignKeyNotification {
             // ignore "resign key" notification sent when app becomes inactive unless closesWhenApplicationBecomesInactive is enabled
             if !closesWhenApplicationBecomesInactive && !NSApp.isActive {
                 return
