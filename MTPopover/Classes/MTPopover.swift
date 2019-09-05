@@ -307,7 +307,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     
     // MARK: -
     // MARK: Initialization
-    override init() {
+    override public init() {
         super.init()
         setInitialPropertyValues()
     }
