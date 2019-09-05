@@ -15,7 +15,7 @@ public class INPopoverParentWindow: NSWindow {
     @objc func isReallyKeyWindow() -> Bool {
         return super.isKeyWindow
     }
-
+    
     func isKeyWindow() -> Bool {
         var isKey = super.isKeyWindow
         if !isKey {

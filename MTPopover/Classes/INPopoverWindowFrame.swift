@@ -24,7 +24,7 @@ public class INPopoverWindowFrame: NSView {
             }
         }
     }
-
+    
     private var _borderColor: NSColor?
     var borderColor: NSColor? {
         get {
@@ -38,7 +38,7 @@ public class INPopoverWindowFrame: NSView {
         }
     }
     var topHighlightColor: NSColor?
-
+    
     private var _borderWidth: CGFloat = 0.0
     var borderWidth: CGFloat {
         get {
@@ -51,7 +51,7 @@ public class INPopoverWindowFrame: NSView {
             }
         }
     }
-
+    
     private var _cornerRadius: CGFloat = 0.0
     var cornerRadius: CGFloat {
         get {
@@ -64,7 +64,7 @@ public class INPopoverWindowFrame: NSView {
             }
         }
     }
-
+    
     private var _arrowSize = NSSize.zero
     var arrowSize: NSSize {
         get {
@@ -77,7 +77,7 @@ public class INPopoverWindowFrame: NSView {
             }
         }
     }
-
+    
     private var _arrowDirection: INPopoverArrowDirection!
     var arrowDirection: INPopoverArrowDirection! {
         get {
@@ -90,7 +90,7 @@ public class INPopoverWindowFrame: NSView {
             }
         }
     }
-
+    
     override init(frame: NSRect) {
         
         super.init(frame: frame)
@@ -100,14 +100,14 @@ public class INPopoverWindowFrame: NSView {
         arrowSize = NSMakeSize(23.0, 12.0)
         arrowDirection = .left
     }
-
+    
     override public func draw(_ dirtyRect: NSRect) {
         var bounds = self.bounds
         if (Int(borderWidth) % 2) == 1 {
             // Remove draw glitch on odd border width
             bounds = bounds.insetBy(dx: 0.5, dy: 0.5)
         }
-
+        
         let path = _popoverBezierPath(with: bounds)
         if color != nil {
             color?.set()
@@ -118,16 +118,16 @@ public class INPopoverWindowFrame: NSView {
             borderColor?.set()
             path?.stroke()
         }
-
+        
         let arrowWidth = arrowSize.width
         let arrowHeight = arrowSize.height
         let radius = cornerRadius
-
+        
         if topHighlightColor != nil {
             topHighlightColor?.set()
             var bounds = self.bounds.insetBy(dx: arrowHeight, dy: arrowHeight)
             let lineRect = NSRect(x: floor(bounds.minX + (radius / 2.0)), y: bounds.maxY - borderWidth - 1, width: bounds.width - radius, height: 1.0)
-
+            
             if arrowDirection == .up {
                 let width = floor((lineRect.size.width / 2.0) - (arrowWidth / 2.0))
                 NSRect(x: lineRect.origin.x, y: lineRect.origin.y, width: width, height: lineRect.size.height).fill()
@@ -137,9 +137,9 @@ public class INPopoverWindowFrame: NSView {
             }
         }
     }
-
-// MARK: -
-// MARK: Private
+    
+    // MARK: -
+    // MARK: Private
     func _popoverBezierPath(with aRect: NSRect) -> NSBezierPath? {
         let radius = cornerRadius
         let arrowWidth = arrowSize.width
@@ -150,10 +150,10 @@ public class INPopoverWindowFrame: NSView {
         let maxX = drawingRect.maxX
         let minY = drawingRect.minY
         let maxY = drawingRect.maxY
-
+        
         let path = NSBezierPath()
         path.lineJoinStyle = .round
-
+        
         // Bottom left corner
         path.appendArc(withCenter: NSPoint(x: minX, y: minY), radius: radius, startAngle: 180.0, endAngle: 270.0)
         if arrowDirection == .down {
@@ -216,13 +216,13 @@ public class INPopoverWindowFrame: NSView {
             path.appendPoints(points, count: 3)
         }
         path.close()
-
+        
         return path
     }
-
-// MARK: -
-// MARK: Accessors
-
+    
+    // MARK: -
+    // MARK: Accessors
+    
     // Redraw the frame every time a property is changed
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)

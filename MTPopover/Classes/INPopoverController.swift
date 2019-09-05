@@ -9,14 +9,14 @@ import Cocoa
 public class INPopoverController: NSObject, CAAnimationDelegate {
     private var screenRect = NSRect.zero
     private var viewRect = NSRect.zero
-
-// MARK: -
-// MARK: Properties
-
+    
+    // MARK: -
+    // MARK: Properties
+    
     //* The delegate of the INPopoverController object (should conform to the INPopoverControllerDelegate protocol) *
     weak var delegate: INPopoverControllerDelegate?
     //* The background color of the popover. Default value is [NSColor blackColor] with an alpha value of 0.8. Changes to this value are not animated. *
-
+    
     private var _color: NSColor?
     public var color: NSColor? {
         get {
@@ -27,7 +27,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         }
     }
     //* Border color to use when drawing a border. Default value: [NSColor blackColor]. Changes to this value are not animated. *
-
+    
     private var _borderColor: NSColor?
     public var borderColor: NSColor? {
         get {
@@ -38,7 +38,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         }
     }
     //* Color to use for drawing a 1px highlight just below the top. Can be nil. Changes to this value are not animated. *
-
+    
     private var _topHighlightColor: NSColor?
     public var topHighlightColor: NSColor? {
         get {
@@ -49,7 +49,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         }
     }
     //* The width of the popover border, drawn using borderColor. Default value: 0.0 (no border). Changes to this value are not animated. *
-
+    
     private var _borderWidth: CGFloat = 0.0
     public var borderWidth: CGFloat {
         get {
@@ -60,7 +60,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         }
     }
     //* Corner radius of the popover window. Default value: 4. Changes to this value are not animated. *
-
+    
     private var _cornerRadius: CGFloat = 0.0
     public var cornerRadius: CGFloat {
         get {
@@ -71,7 +71,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         }
     }
     //* The size of the popover arrow. Default value: {23, 12}. Changes to this value are not animated. *
-
+    
     private var _arrowSize = NSSize.zero
     public var arrowSize: NSSize {
         get {
@@ -82,13 +82,13 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         }
     }
     //* The current arrow direction of the popover. If the popover has never been displayed, then this will return INPopoverArrowDirectionUndefined
-
+    
     private var _arrowDirection: INPopoverArrowDirection!
     public var arrowDirection: INPopoverArrowDirection! {
         return (popoverWindow?.frameView?.arrowDirection)!
     }
     //* The size of the content of the popover. This is automatically set to contentViewController's size when the view controller is set, but can be modified. Changes to this value are animated when animates is set to YES *
-
+    
     private var _contentSize = NSSize.zero
     public var contentSize: NSSize {
         get {
@@ -110,10 +110,10 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
     //* Enable or disable animation when showing/closing the popover and changing the content size. Default value: YES
     public var animates = false
     /* If `animates` is `YES`, this is the animation type to use when showing/closing the popover.
-       Default value: `INPopoverAnimationTypePop` **/
+     Default value: `INPopoverAnimationTypePop` **/
     public var animationType: INPopoverAnimationType!
     //* The content view controller from which content is displayed in the popover *
-
+    
     private var _contentViewController: NSViewController?
     var contentViewController: NSViewController? {
         get {
@@ -134,12 +134,12 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
     //* The window of the popover *
     private(set) var popoverWindow: INPopoverWindow?
     //* Whether the popover is currently visible or not *
-
+    
     public var popoverIsVisible: Bool {
         return popoverWindow?.isVisible ?? false
     }
     //* Whether the window can become key or not. Default value: YES *
-
+    
     public var windowCanBecomeKey: Bool {
         get {
             return popoverWindow?.canBecomeKeyWindowOverride ?? false
@@ -148,10 +148,10 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
             popoverWindow?.canBecomeKeyWindowOverride = windowCanBecomeKey
         }
     }
-
-// MARK: -
-// MARK: Methods
-
+    
+    // MARK: -
+    // MARK: Methods
+    
     /**
      Initializes the popover with a content view already set.
      @param viewController the content view controller
@@ -163,7 +163,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         _setInitialPropertyValues()
         contentViewController = viewController
     }
-
+    
     /**
      Displays the popover.
      @param rect the rect in the positionView from which to display the popover
@@ -189,7 +189,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         popoverWindow?.updateContentView()
         popoverWindow?.setFrame(windowFrame, display: true) // Se the frame of the window
         (popoverWindow?.animation(forKey: "alphaValue") as? CAAnimation)?.delegate = self
-
+        
         // Show the popover
         _callDelegateMethod(#selector(NSPopoverDelegate.popoverWillShow(_:))) // Call the delegate
         if animates && animationType != .fadeOut {
@@ -203,7 +203,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
             popoverWindow?.makeKeyAndOrderFront(nil) // Show the popover
             _callDelegateMethod(#selector(NSPopoverDelegate.popoverDidShow(_:))) // Call the delegate
         }
-
+        
         let nc = NotificationCenter.default
         if anchors {
             // If the anchors option is enabled, register for bounds change notifications
@@ -220,14 +220,14 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
             nc.addObserver(self, selector: #selector(closePopover(_:)), name: NSApplication.didResignActiveNotification, object: nil)
         }
     }
-
+    
     /** 
      Recalculates the best arrow direction for the current window position and resets the arrow direction. The change will not be animated. **/
     func recalculateAndResetArrowDirection() {
         let direction = _arrowDirection(withPreferredArrowDirection: arrowDirection)
         _setArrowDirection(direction)
     }
-
+    
     /**
      Closes the popover unless NO is returned for the -popoverShouldClose: delegate method 
      @param sender the object that sent this message
@@ -251,7 +251,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
             forceClosePopover(sender ?? self)
         }
     }
-
+    
     /**
      Closes the popover regardless of what the delegate returns
      @param sender the object that sent this message
@@ -267,7 +267,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
             _closePopoverAndResetVariables()
         }
     }
-
+    
     /**
      Returns the frame for a popop window with a given size depending on the arrow direction.
      @param contentSize the popover window content size
@@ -305,32 +305,32 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         }
         return windowFrame ?? NSRect.zero
     }
-
-// MARK: -
-// MARK: Initialization
+    
+    // MARK: -
+    // MARK: Initialization
     override init() {
         super.init()
         _setInitialPropertyValues()
     }
-
+    
     override public func awakeFromNib() {
         super.awakeFromNib()
         _setInitialPropertyValues()
     }
-
-// MARK: -
-// MARK: - Memory Management
+    
+    // MARK: -
+    // MARK: - Memory Management
     deinit {
         popoverWindow?.popoverController = nil
     }
-
-// MARK: -
-// MARK: Public Methods
-
+    
+    // MARK: -
+    // MARK: Public Methods
+    
     // Calculate the frame of the window depending on the arrow direction
     public func animationDidStop(_ animation: CAAnimation, finished flag: Bool) {
-//#pragma unused(animation)
-//#pragma unused(flag)
+        //#pragma unused(animation)
+        //#pragma unused(flag)
         // Detect the end of fade out and close the window
         if 0.0 == popoverWindow?.alphaValue {
             _closePopoverAndResetVariables()
@@ -341,14 +341,14 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
             _callDelegateMethod(#selector(NSPopoverDelegate.popoverDidShow(_:)))
         }
     }
-
+    
     @objc func applicationDidBecomeActive(_ notification: Notification) {
         // when the user clicks in the parent window for activating the app, the parent window becomes key which prevents 
         if popoverWindow?.isVisible ?? false {
             perform(#selector(checkPopoverKeyWindowStatus), with: nil, afterDelay: 0)
         }
     }
-
+    
     @objc func checkPopoverKeyWindowStatus() {
         let parentWindow = positionView?.window // could be INPopoverParentWindow
         
@@ -365,30 +365,30 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
             popoverWindow?.makeKey()
         }
     }
-
-// MARK: -
-// MARK: Getters
-
+    
+    // MARK: -
+    // MARK: Getters
+    
     func contentView() -> NSView? {
         return popoverWindow?.popoverContentView
     }
-
-// MARK: -
-// MARK: Setters
-
+    
+    // MARK: -
+    // MARK: Setters
+    
     func _setArrowDirection(_ direction: INPopoverArrowDirection) {
         popoverWindow?.frameView?.arrowDirection = direction // UIMenuController.ArrowDirection(rawValue: direction.rawValue)
     }
-
-// MARK: -
-// MARK: Private
-
+    
+    // MARK: -
+    // MARK: Private
+    
     // Set the default values for all the properties as described in the header documentation
     func _setInitialPropertyValues() {
         // Create an empty popover window
         popoverWindow = INPopoverWindow(contentRect: NSRect.zero, styleMask: .borderless, backing: .buffered, defer: false)
         popoverWindow?.popoverController = self
-
+        
         // set defaults like iCal popover
         color = NSColor(calibratedWhite: 0.94, alpha: 0.92)
         borderColor = NSColor(calibratedWhite: 1.0, alpha: 0.92)
@@ -398,12 +398,12 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         closesWhenApplicationBecomesInactive = false
         animates = true
         animationType = .pop
-
+        
         // create animation to get callback - delegate is set when opening popover to avoid memory cycles
         let animation = CABasicAnimation()
         popoverWindow?.animations = ["alphaValue" : animation]
     }
-
+    
     // Figure out which direction best stays in screen bounds
     func _arrowDirection(withPreferredArrowDirection direction: INPopoverArrowDirection) -> INPopoverArrowDirection {
         let screenFrame = positionView?.window?.screen?.frame ?? NSZeroRect
@@ -415,16 +415,16 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         // First thing to try is making the popover go opposite of its current direction
         var newDirection: INPopoverArrowDirection = .undefined
         switch direction {
-            case .up:
-                newDirection = .down
-            case .down:
-                newDirection = .up
-            case .left:
-                newDirection = .right
-            case .right:
-                newDirection = .left
-            default:
-                break
+        case .up:
+            newDirection = .down
+        case .down:
+            newDirection = .up
+        case .left:
+            newDirection = .right
+        case .right:
+            newDirection = .left
+        default:
+            break
         }
         // If the popover now fits within bounds, then return the newly adjusted direction
         windowFrame = popoverFrame(with: contentSize, andArrowDirection: newDirection)
@@ -440,12 +440,12 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         let arrowUp = down > up
         // Now the next thing to try is the direction with the most space
         switch direction {
-            case .up, .down:
-                newDirection = arrowLeft ? .left : .right
-            case .left, .right:
-                newDirection = arrowUp ? .up : .down
-            default:
-                break
+        case .up, .down:
+            newDirection = arrowLeft ? .left : .right
+        case .left, .right:
+            newDirection = arrowUp ? .up : .down
+        default:
+            break
         }
         // If the popover now fits within bounds, then return the newly adjusted direction
         windowFrame = popoverFrame(with: contentSize, andArrowDirection: newDirection)
@@ -455,7 +455,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         // If that didn't fit, then that means that it will be out of bounds on every side so just return the original direction
         return direction
     }
-
+    
     @objc func _positionViewBoundsChanged(_ notification: Notification?) {
         let superviewBounds = positionView?.superview?.bounds ?? NSZeroRect
         if !(NSContainsRect(superviewBounds, positionView?.frame ?? NSZeroRect)) {
@@ -469,7 +469,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         newFrame?.origin = calculatedFrame.origin
         popoverWindow?.setFrame(newFrame ?? NSRect.zero, display: true, animate: false) // Set the frame of the window
     }
-
+    
     func _closePopoverAndResetVariables() {
         let positionWindow = positionView?.window
         popoverWindow?.orderOut(nil) // Close the window
@@ -484,18 +484,18 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         positionView = nil
         screenRect = NSRect.zero
         viewRect = NSRect.zero
-
+        
         // When using ARC and no animation, there is a "message sent to deallocated instance" crash if setDelegate: is not performed at the end of the event.
         // popoverWindow?.animation(forKey: "alphaValue")?.perform(#selector(setDelegate(_:)), with: nil, afterDelay: 0)
         (popoverWindow?.animation(forKey: "alphaValue") as? CAAnimation)?.delegate = nil
     }
-
+    
     func _callDelegateMethod(_ selector: Selector) {
         if delegate?.responds(to: selector) ?? false {
-        //#pragma clang diagnostic push
-        //#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+            //#pragma clang diagnostic push
+            //#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             delegate?.perform(selector, with: self)
-        //#pragma clang diagnostic pop
+            //#pragma clang diagnostic pop
         }
     }
 }
