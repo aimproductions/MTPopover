@@ -6,89 +6,59 @@ import Cocoa
  */
 
 public class MTPopoverWindowFrame: NSView {
-    private var _color: NSColor?
-    var color: NSColor? {
-        get {
-            return _color
-        }
-        set(newColor) {
-            if _color != newColor {
-                _color = newColor
-                needsDisplay = true
-            }
+
+    var color: NSColor? = NSColor(calibratedWhite: 0.0, alpha: 0.8) {
+        didSet {
+            guard oldValue != color else { return }
+            needsDisplay = true
         }
     }
     
-    private var _borderColor: NSColor?
     var borderColor: NSColor? {
-        get {
-            return _borderColor
-        }
-        set(newBorderColor) {
-            if _borderColor != newBorderColor {
-                _borderColor = newBorderColor
-                needsDisplay = true
-            }
+        didSet {
+            guard oldValue != borderColor else { return }
+            needsDisplay = true
         }
     }
-    var topHighlightColor: NSColor?
+    
+    var topHighlightColor: NSColor? {
+        didSet {
+            guard oldValue != topHighlightColor else { return }
+            needsDisplay = true
+        }
+    }
     
     var borderWidth: CGFloat = 0.0 {
         didSet {
-            
-            if oldValue != borderWidth {
-                needsDisplay = true
-            }
+            guard oldValue != borderWidth else { return }
+            needsDisplay = true
         }
     }
     
-    private var _cornerRadius: CGFloat = 0.0
-    var cornerRadius: CGFloat {
-        get {
-            return _cornerRadius
-        }
-        set(cornerRadius) {
-            if _cornerRadius != cornerRadius {
-                _cornerRadius = cornerRadius
-                needsDisplay = true
-            }
+    var cornerRadius: CGFloat = 4.0 {
+        didSet {
+            guard oldValue != cornerRadius else { return }
+            needsDisplay = true
         }
     }
     
-    private var _arrowSize = NSSize.zero
-    var arrowSize: NSSize {
-        get {
-            return _arrowSize
-        }
-        set(arrowSize) {
-            if !NSEqualSizes(_arrowSize, arrowSize) {
-                _arrowSize = arrowSize
-                needsDisplay = true
-            }
+    var arrowSize: NSSize = NSSize(width: 23.0, height: 12.0) {
+        didSet {
+            guard !NSEqualSizes(oldValue, arrowSize) else { return }
+            needsDisplay = true
         }
     }
     
-    private var _arrowDirection: INPopoverArrowDirection!
-    var arrowDirection: INPopoverArrowDirection! {
-        get {
-            return _arrowDirection
-        }
-        set(newArrowDirection) {
-            if _arrowDirection != newArrowDirection {
-                _arrowDirection = newArrowDirection
-                needsDisplay = true
-            }
+    var arrowDirection: INPopoverArrowDirection = .left {
+        didSet {
+            guard oldValue != arrowDirection else { return }
+            needsDisplay = true
         }
     }
     
     override init(frame: NSRect) {
         
         super.init(frame: frame)
-        
-        color = NSColor(calibratedWhite: 0.0, alpha: 0.8)
-        cornerRadius = 4.0
-        arrowSize = NSMakeSize(23.0, 12.0)
-        arrowDirection = .left
     }
     
     override public func draw(_ dirtyRect: NSRect) {

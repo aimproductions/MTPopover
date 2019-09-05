@@ -7,40 +7,32 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     // MARK: -
     // MARK: Properties
     
-    //* The delegate of the INPopoverController object (should conform to the INPopoverControllerDelegate protocol) *
+    /// The delegate of the INPopoverController object (must conform to the INPopoverControllerDelegate protocol)
     weak var delegate: INPopoverControllerDelegate?
-    //* The background color of the popover. Default value is [NSColor blackColor] with an alpha value of 0.8. Changes to this value are not animated. *
     
+    /// The background color of the popover. Default value is [NSColor blackColor] with an alpha value of 0.8.
+    /// Changes to this value are not animated.
     public var color: NSColor? {
-        get {
-            return popoverWindow.frameView?.color
-        }
-        set(newColor) {
-            popoverWindow.frameView?.color = newColor
-        }
+        get { return popoverWindow.frameView?.color }
+        set(newColor) { popoverWindow.frameView?.color = newColor }
     }
-    //* Border color to use when drawing a border. Default value: [NSColor blackColor]. Changes to this value are not animated. *
     
+    /// Border color to use when drawing a border. Default value: [NSColor blackColor].
+    /// Changes to this value are not animated.
     public var borderColor: NSColor? {
-        get {
-            return popoverWindow.frameView?.borderColor
-        }
-        set(newBorderColor) {
-            popoverWindow.frameView?.borderColor = newBorderColor
-        }
+        get { return popoverWindow.frameView?.borderColor }
+        set(newBorderColor) { popoverWindow.frameView?.borderColor = newBorderColor }
     }
-    //* Color to use for drawing a 1px highlight just below the top. Can be nil. Changes to this value are not animated. *
     
+    /// Color to use for drawing a 1px highlight just below the top. Can be nil.
+    /// Changes to this value are not animated.
     public var topHighlightColor: NSColor? {
-        get {
-            return popoverWindow.frameView?.topHighlightColor
-        }
-        set(newTopHighlightColor) {
-            popoverWindow.frameView?.topHighlightColor = newTopHighlightColor
-        }
+        get { return popoverWindow.frameView?.topHighlightColor }
+        set(newTopHighlightColor) { popoverWindow.frameView?.topHighlightColor = newTopHighlightColor }
     }
-    //* The width of the popover border, drawn using borderColor. Default value: 0.0 (no border). Changes to this value are not animated. *
     
+    /// The width of the popover border, drawn using borderColor. Default value: 0.0 (no border).
+    /// Changes to this value are not animated.
     public var borderWidth: CGFloat {
         get {
             return popoverWindow.frameView?.borderWidth ?? 0.0
