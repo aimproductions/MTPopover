@@ -79,6 +79,9 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     /// Whether the popover closes when the application becomes inactive. Default value: NO
     public var closesWhenApplicationBecomesInactive = false
     
+    /// Whether the popover closes when the position view goes offscreen. Only relevant when the position is bound to the anchors. Default value: YES
+    public var closesWhenGoingOffscreen = true
+    
     /// Enable or disable animation when showing/closing the popover and changing the content size. Default value: YES
     public var animates = false
     
@@ -456,7 +459,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     
     @objc private func positionViewBoundsChanged(_ notification: Notification?) {
         let superviewBounds = positionView?.superview?.bounds ?? NSZeroRect
-        if !(NSContainsRect(superviewBounds, positionView?.frame ?? NSZeroRect)) {
+        if closesWhenGoingOffscreen && !(NSContainsRect(superviewBounds, positionView?.frame ?? NSZeroRect)) {
             forceClosePopover(self) // If the position view goes off screen then close the popover
             return
         }
@@ -484,7 +487,6 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         viewRect = NSRect.zero
         
         // When using ARC and no animation, there is a "message sent to deallocated instance" crash if setDelegate: is not performed at the end of the event.
-        // popoverWindow.animation(forKey: "alphaValue")?.perform(#selector(setDelegate(_:)), with: nil, afterDelay: 0)
         (popoverWindow.animation(forKey: "alphaValue") as? CAAnimation)?.delegate = nil
     }
     
