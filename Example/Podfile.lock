@@ -1,0 +1,16 @@
+PODS:
+  - MTPopover (0.1.0)
+
+DEPENDENCIES:
+  - MTPopover (from `../`)
+
+EXTERNAL SOURCES:
+  MTPopover:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  MTPopover: 432cdf9aa8b81d995c93a6d86f682f60f427c42a
+
+PODFILE CHECKSUM: 39a86d4fc597fbc786f400e7439e51212bd562d1
+
+COCOAPODS: 1.7.5

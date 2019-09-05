@@ -1,0 +1,234 @@
+//  Converted to Swift 5 by Swiftify v5.0.30657 - https://objectivec2swift.com/
+//
+//  INPopoverWindow.swift
+//  Copyright 2011-2014 Indragie Karunaratne. All rights reserved.
+//
+
+import AppKit
+import QuartzCore
+
+/** 
+ @class INPopoverWindow
+ An NSWindow subclass used to draw a custom window frame (@class INPopoverWindowFrame)
+ **/
+
+class INPopoverWindow: NSPanel {
+    private var zoomWindow: NSWindow?
+
+    var frameView: INPopoverWindowFrame? {
+        return contentView as? INPopoverWindowFrame
+    }
+ /* Equivalent to contentView */    var popoverController: INPopoverController?
+
+    private var _popoverContentView: NSView?
+    var popoverContentView: NSView? {
+        get {
+            return _popoverContentView
+        }
+        set(aView) {
+            if _popoverContentView?.isEqual(to: aView) ?? false {
+                return
+            }
+            var bounds = frame
+            bounds.origin = NSPoint.zero
+            var frameView = self.frameView
+            if frameView == nil {
+                frameView = INPopoverWindowFrame(frame: bounds)
+                super.contentView = frameView // Call on super or there will be infinite loop
+            }
+            if _popoverContentView != nil {
+                _popoverContentView?.removeFromSuperview()
+            }
+            _popoverContentView = aView
+            _popoverContentView?.frame = contentRect(forFrameRect: bounds)
+            _popoverContentView?.autoresizingMask = [.width, .height]
+            if let _popoverContentView = _popoverContentView {
+                frameView?.addSubview(_popoverContentView)
+            }
+        }
+    }
+    var canBecomeKeyWindow = false
+
+    func updateContentView() {
+        var bounds = frame
+        bounds.origin = NSPoint.zero
+        popoverContentView?.frame = contentRect(forFrameRect: bounds)
+    }
+
+    func presentAnimated() {
+        if isVisible {
+            return
+        }
+
+        switch popoverController?.animationType {
+            case .pop?:
+                presentWithPopAnimation()
+            case .fadeIn?, (.fadeInOut /* Fade in and out */)?:
+                presentWithFadeAnimation()
+            default:
+                break
+        }
+    }
+
+    func dismissAnimated() {
+        zoomWindow?.animator()?.alphaValue = 0.0 // in case zoom window is currently animating
+        animator().alphaValue = 0.0
+    }
+
+    // Borderless, transparent window
+    override init(contentRect: NSRect, styleMask windowStyle: NSWindow.StyleMask, backing bufferingType: NSWindow.BackingStoreType, defer deferCreation: Bool) {
+        super.init(contentRect: contentRect, styleMask: NSNonactivatingPanelMask, backing: bufferingType, defer: deferCreation) != nil
+            isOpaque = false
+            backgroundColor = NSColor.clear
+            hasShadow = true
+            self.canBecomeKeyWindow = true
+    }
+
+    // Leave some space around the content for drawing the arrow
+    override func contentRect(forFrameRect windowFrame: NSRect) -> NSRect {
+        var windowFrame = windowFrame
+        windowFrame.origin = NSPoint.zero
+        let arrowHeight = frameView?.arrowSize.height
+        return windowFrame.insetBy(dx: arrowHeight ?? 0.0, dy: arrowHeight ?? 0.0)
+    }
+
+    override func frameRect(forContentRect contentRect: NSRect) -> NSRect {
+        let arrowHeight = frameView?.arrowSize.height
+        return contentRect.insetBy(dx: -(arrowHeight ?? 0.0), dy: -(arrowHeight ?? 0.0))
+    }
+
+    override var canBecomeMain: Bool {
+        return false
+    }
+
+    override var isVisible: Bool {
+        return super.isVisible || zoomWindow?.isVisible ?? false
+    }
+
+    override var contentView: NSView? {
+        get {
+            return super.contentView
+        }
+        set(aView) {
+            popoverContentView = aView
+        }
+    }
+
+    func presentWithPopAnimation() {
+        let endFrame = frame
+        var startFrame: NSRect? = nil
+        if let arrowDirection = frameView?.arrowDirection {
+            startFrame = popoverController?.popoverFrame(with: START_SIZE, andArrowDirection: arrowDirection)
+        }
+        var overshootFrame: NSRect? = nil
+        if let arrowDirection = frameView?.arrowDirection {
+            overshootFrame = popoverController?.popoverFrame(with: NSMakeSize(Double(endFrame.size.width) * OVERSHOOT_FACTOR, Double(endFrame.size.height) * OVERSHOOT_FACTOR), andArrowDirection: arrowDirection)
+        }
+
+        zoomWindow = _zoom(with: startFrame ?? NSRect.zero)
+        zoomWindow?.alphaValue = 0.0
+        zoomWindow?.orderFront(self)
+
+        // configure bounce-out animation
+        let anim = CAKeyframeAnimation()
+        anim.delegate = self
+        anim.values = [NSValue(rect: startFrame ?? NSRect.zero), NSValue(rect: overshootFrame ?? NSRect.zero), NSValue(rect: endFrame)]
+        zoomWindow?.animations = [
+        "frame" : anim
+        ]
+
+        NSAnimationContext.beginGrouping()
+        zoomWindow?.animator()?.alphaValue = 1.0
+        zoomWindow?.animator()?.setFrame(endFrame, display: true)
+        NSAnimationContext.endGrouping()
+    }
+
+    func presentWithFadeAnimation() {
+        alphaValue = 0.0
+        makeKeyAndOrderFront(nil)
+        animator().alphaValue = 1.0
+    }
+
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+        alphaValue = 1.0
+        makeKeyAndOrderFront(self)
+        zoomWindow?.close()
+        zoomWindow = nil
+
+        // call the animation delegate of the "real" window
+        let windowAnimation = animation(forKey: "alphaValue") as? CAAnimation
+        windowAnimation?.delegate?.animationDidStop?(anim, finished: flag)
+    }
+
+    override func cancelOperation(_ sender: Any?) {
+        if popoverController?.closesWhenEscapeKeyPressed ?? false {
+            popoverController?.closePopover(nil)
+        }
+    }
+
+// MARK: -
+// MARK: Private
+
+    // The following method is adapted from the following class:
+    // <https://github.com/MrNoodle/NoodleKit/blob/master/NSWindow-NoodleEffects.m>
+    //  Copyright 2007-2009 Noodlesoft, LLC. All rights reserved.
+    func _zoom(with rect: NSRect) -> NSWindow? {
+        let isOneShot = self.isOneShot()
+        if isOneShot {
+            self.isOneShot = false
+        }
+
+        if windowNumber <= 0 {
+            // force creation of window device by putting it on-screen. We make it transparent to minimize the chance of visible flicker
+            let alpha = alphaValue
+            alphaValue = 0.0
+            orderBack(self)
+            orderOut(self)
+            alphaValue = alpha
+        }
+
+        // get window content as image
+        let frame = self.frame
+        let image = NSImage(size: frame.size)
+        displayIfNeeded() // refresh view
+        let view = contentView
+        let imageRep = view?.bitmapImageRepForCachingDisplay(in: view?.bounds ?? NSRect.zero)
+        if let imageRep = imageRep {
+            view?.cacheDisplay(in: view?.bounds ?? NSRect.zero, to: imageRep)
+        }
+        if let imageRep = imageRep {
+            image.addRepresentation(imageRep)
+        }
+
+        // create zoom window
+        let zoomWindow = NSWindow(contentRect: rect, styleMask: NSBorderlessWindowMask, backing: .buffered, defer: false)
+        zoomWindow.backgroundColor = NSColor.clear
+        zoomWindow.hasShadow = hasShadow
+        zoomWindow.level = level
+        zoomWindow.isOpaque = false
+        zoomWindow.isReleasedWhenClosed = false
+
+        let imageView = NSImageView(frame: zoomWindow.contentRect(forFrameRect: frame))
+        imageView.image = image
+        imageView.imageFrameStyle = .none
+        imageView.imageScaling = .scaleProportionallyUpOrDown
+        imageView.autoresizingMask = [.width, .height]
+
+        zoomWindow.contentView = imageView
+
+        // reset one shot flag
+        self.isOneShot = isOneShot
+
+        return zoomWindow
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+}
+
+let START_SIZE = NSMakeSize(20, 20)
+let OVERSHOOT_FACTOR = 1.2
+
+// A lot of this code was adapted from the following article:
+// <http://cocoawithlove.com/2008/12/drawing-custom-window-on-mac-os-x.html>

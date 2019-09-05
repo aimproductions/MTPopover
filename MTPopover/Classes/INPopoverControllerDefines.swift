@@ -1,0 +1,22 @@
+//  Converted to Swift 5 by Swiftify v5.0.30657 - https://objectivec2swift.com/
+//
+//  INPopoverControllerDefines.swift
+//  Copyright 2011-2014 Indragie Karunaratne. All rights reserved.
+//
+
+enum INPopoverArrowDirection : Int {
+    case undefined = 0
+    case left = []
+    case right = []
+    case up = []
+    case down = []
+    case upLeft = 100
+    case upRight = 101
+}
+
+enum INPopoverAnimationType : Int {
+    case pop = 0 // Pop animation similar to NSPopover
+    case fadeIn // Fade in only, no fade out
+    case fadeOut // Fade out only, no fade in
+    case fadeInOut // Fade in and out
+}
