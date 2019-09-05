@@ -145,6 +145,9 @@ public class MTPopoverWindowFrame: NSView {
         let minY = drawingRect.minY
         let maxY = drawingRect.maxY
         
+        // extra protection
+        guard !minX.isNaN && !minX.isInfinite && !minY.isNaN && !minY.isInfinite else { return nil }
+        
         let path = NSBezierPath()
         path.lineJoinStyle = .round
         
