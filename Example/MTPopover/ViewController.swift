@@ -9,7 +9,7 @@
 import Cocoa
 import MTPopover
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, MTPopoverDelegate {
     private var popoverController: MTPopover!
     
     override func viewDidLoad() {
@@ -23,7 +23,7 @@ class ViewController: NSViewController {
         }
         
         if popoverController.popoverIsVisible {
-            popoverController.closePopover(sender)
+            popoverController.forceClosePopover(sender)
         }
         
         self.popoverController = nil
@@ -45,6 +45,7 @@ class ViewController: NSViewController {
             popoverController.closesWhenEscapeKeyPressed = false
             popoverController.closesWhenPopoverResignsKey = false
             popoverController.closesWhenGoingOffscreen = true
+            popoverController.delegate = self
         }
         
         if popoverController.popoverIsVisible {
@@ -54,6 +55,30 @@ class ViewController: NSViewController {
         }
     }
 
-
+    func popoverDidClose(_ popover: MTPopover) {
+        
+        print("popoverDidClose(...)")
+    }
+    
+    func popoverShouldClose(_ popover: MTPopover) -> Bool {
+        
+        print("popoverShouldClose(...)")
+        
+        return true
+    }
+    
+    func popoverDidShow(_ popover: MTPopover) {
+        
+        print("popoverDidShow(...)")
+    }
+    
+    func popoverWillShow(_ popover: MTPopover) {
+        
+        print("popoverWillShow(...)")
+    }
+    
+    func popoverWillClose(_ popover: MTPopover) {
+        
+        print("popoverWillClose(...)")
+    }
 }
-

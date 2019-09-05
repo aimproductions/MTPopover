@@ -36,8 +36,8 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
             _popoverContentView = aView
             _popoverContentView?.frame = contentRect(forFrameRect: bounds)
             _popoverContentView?.autoresizingMask = [.width, .height]
-            if let _popoverContentView = _popoverContentView {
-                frameView?.addSubview(_popoverContentView)
+            if let popoverContentView = _popoverContentView {
+                frameView?.addSubview(popoverContentView)
             }
         }
     }
