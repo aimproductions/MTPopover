@@ -23,7 +23,7 @@ class ViewController: NSViewController, MTPopoverDelegate {
         }
         
         if popoverController.popoverIsVisible {
-            popoverController.forceClosePopover(sender)
+            popoverController.close()
         }
         
         self.popoverController = nil
@@ -49,9 +49,9 @@ class ViewController: NSViewController, MTPopoverDelegate {
         }
         
         if popoverController.popoverIsVisible {
-            popoverController.closePopover(sender)
+            popoverController.performClose()
         } else {
-            popoverController.presentPopover(positioningRect: (sender as! NSView).bounds, of: sender as! NSView, preferredArrowDirection: .down, anchorsToPositionView: true)
+            popoverController.show(relativeTo: (sender as! NSView).bounds, of: sender as! NSView, preferredArrowDirection: .down, anchorsToPositionView: true)
         }
     }
 

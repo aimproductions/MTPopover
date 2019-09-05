@@ -163,7 +163,7 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
         
         if popoverController.closesWhenEscapeKeyPressed {
             
-            popoverController.closePopover(sender ?? self)
+            popoverController.performClose(sender ?? NSNull())
         }
     }
     

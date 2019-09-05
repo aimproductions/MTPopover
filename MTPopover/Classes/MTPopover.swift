@@ -144,8 +144,8 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     /// Displays the popover.
     ///
     /// - Parameters:
-    ///   - rect: the rect in the positionView from which to display the popover
-    ///   - positionView: the view that the popover is positioned relative to
+    ///   - relativeTo: the rect in the positionView from which to display the popover
+    ///   - of: the view that the popover is positioned relative to
     ///   - preferredArrowDirection: the prefered direction at which the arrow will point.
     ///     There is no guarantee that this will be the actual arrow direction,
     ///     depending on whether the screen is able to accomodate the popover in that position.
@@ -154,10 +154,10 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     ///     according to the point at which it was originally placed.
     ///     This also means that if the positionView goes off screen, the popover will be automatically closed.
     ///     Default value: YES
-    public func presentPopover(positioningRect rect: NSRect,
-                               of positionView: NSView,
-                               preferredArrowDirection: MTPopoverArrowDirection,
-                               anchorsToPositionView anchors: Bool = true) {
+    public func show(relativeTo rect: NSRect,
+                     of positionView: NSView,
+                     preferredArrowDirection: MTPopoverArrowDirection,
+                     anchorsToPositionView anchors: Bool = true) {
         guard !popoverIsVisible else { return } // If it's already visible, do nothing
         
         guard let mainWindow = positionView.window else {
@@ -202,13 +202,13 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         
         // When -closesWhenPopoverResignsKey is set to YES, the popover will automatically close when the popover loses its key status
         if closesWhenPopoverResignsKey {
-            notificationCenter.addObserver(self, selector: #selector(closePopover(_:)), name: NSWindow.didResignKeyNotification, object: popoverWindow)
+            notificationCenter.addObserver(self, selector: #selector(performClose(_:)), name: NSWindow.didResignKeyNotification, object: popoverWindow)
             if !closesWhenApplicationBecomesInactive {
                 notificationCenter.addObserver(self, selector: #selector(NSApplicationDelegate.applicationDidBecomeActive(_:)), name: NSApplication.didBecomeActiveNotification, object: nil)
             }
         } else if closesWhenApplicationBecomesInactive {
             // this is only needed if closesWhenPopoverResignsKey is NO, otherwise we already get a "resign key" notification when resigning active
-            notificationCenter.addObserver(self, selector: #selector(closePopover(_:)), name: NSApplication.didResignActiveNotification, object: nil)
+            notificationCenter.addObserver(self, selector: #selector(performClose(_:)), name: NSApplication.didResignActiveNotification, object: nil)
         }
     }
     
@@ -224,7 +224,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     /// - Note that the popup must be closed (either manually or automatically) before its reference can be released
     ///
     /// - Parameter sender: the object that sent this message
-    @IBAction public func closePopover(_ sender: Any) {
+    @IBAction public func performClose(_ sender: Any = NSNull()) {
         guard popoverWindow.isVisible else { return }
         
         if (sender is Notification) && ((sender as? Notification)?.name) == NSWindow.didResignKeyNotification {
@@ -245,7 +245,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         }
         
         if close {
-            forceClosePopover(sender)
+            self.close(sender)
         }
     }
     
@@ -254,7 +254,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     /// - Note that the popup must be closed (either manually or automatically) before its reference can be released
     ///
     /// - Parameter sender: the object that sent this message
-    @IBAction public func forceClosePopover(_ sender: Any) {
+    @IBAction public func close(_ sender: Any = NSNull()) {
         guard popoverWindow.isVisible else { return }
         
         callDelegateMethod(#selector(NSPopoverDelegate.popoverWillClose(_:))) // Call delegate
@@ -462,7 +462,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     @objc private func positionViewBoundsChanged(_ notification: Notification?) {
         let superviewBounds = positionView?.superview?.bounds ?? NSZeroRect
         if closesWhenGoingOffscreen && !(NSContainsRect(superviewBounds, positionView?.frame ?? NSZeroRect)) {
-            forceClosePopover(self) // If the position view goes off screen then close the popover
+            close(self) // If the position view goes off screen then close the popover
             return
         }
         var newFrame = popoverWindow.frame
