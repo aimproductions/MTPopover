@@ -1,9 +1,3 @@
-//  Converted to Swift 5 by Swiftify v5.0.30657 - https://objectivec2swift.com/
-//
-//  INPopoverControllerDefines.swift
-//  Copyright 2011-2014 Indragie Karunaratne. All rights reserved.
-//
-
 public enum INPopoverArrowDirection : Int {
     case undefined = 0
     case left = 1

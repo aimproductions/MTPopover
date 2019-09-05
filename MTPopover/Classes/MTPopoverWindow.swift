@@ -1,9 +1,3 @@
-//  Converted to Swift 5 by Swiftify v5.0.30657 - https://objectivec2swift.com/
-//
-//  INPopoverWindow.swift
-//  Copyright 2011-2014 Indragie Karunaratne. All rights reserved.
-//
-
 import AppKit
 import QuartzCore
 
