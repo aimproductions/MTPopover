@@ -8,7 +8,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     // MARK: Properties
     
     /// The delegate of the INPopoverController object (must conform to the INPopoverControllerDelegate protocol)
-    weak var delegate: INPopoverControllerDelegate?
+    weak var delegate: MTPopoverDelegate?
     
     /// The background color of the popover. Default value is [NSColor blackColor] with an alpha value of 0.8.
     /// Changes to this value are not animated.
@@ -465,40 +465,44 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     
     func _callDelegateMethod(_ selector: Selector) {
-        if delegate?.responds(to: selector) ?? false {
+        guard let delegate = delegate else { return }
+        
+        if delegate.responds(to: selector) {
             //#pragma clang diagnostic push
             //#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            _ = delegate?.perform(selector, with: self)
+            _ = delegate.perform(selector, with: self)
             //#pragma clang diagnostic pop
         }
     }
 }
 
-@objc public protocol INPopoverControllerDelegate: NSObjectProtocol {
-    /**
-     When the -closePopover: method is invoked, this method is called to give a change for the delegate to prevent it from closing. Returning NO for this delegate method will prevent the popover being closed. This delegate method does not apply to the -forceClosePopover: method, which will close the popover regardless of what the delegate returns.
-     @param popover the @class INPopoverController object that is controlling the popover
-     @returns whether the popover should close or not
-     */
-    @objc optional func popoverShouldClose(_ popover: MTPopover?) -> Bool
-    /**
-     Invoked right before the popover shows on screen
-     @param popover the @class INPopoverController object that is controlling the popover
-     */
-    @objc optional func popoverWillShow(_ popover: MTPopover?)
-    /**
-     Invoked right after the popover shows on screen
-     @param popover the @class INPopoverController object that is controlling the popover
-     */
-    @objc optional func popoverDidShow(_ popover: MTPopover?)
-    /**
-     Invoked right before the popover closes
-     @param popover the @class INPopoverController object that is controlling the popover
-     */
-    @objc optional func popoverWillClose(_ popover: MTPopover?)
-    /**
-     Invoked right before the popover closes
-     @param popover the @class INPopoverController object that is controlling the popover
-     */
-    @objc optional func popoverDidClose(_ popover: MTPopover?)
+@objc public protocol MTPopoverDelegate: NSObjectProtocol {
+
+    /// When the -closePopover: method is invoked, this method is called to give a change for the delegate to prevent it from closing.
+    /// Returning NO for this delegate method will prevent the popover being closed.
+    /// This delegate method does not apply to the -forceClosePopover: method, which will close the popover regardless of what the delegate returns.
+    ///
+    /// - Parameter popover: the @class MTPopover object that is controlling the popover
+    /// - Returns: whether the popover should close or not
+    @objc optional func popoverShouldClose(_ popover: MTPopover) -> Bool
+
+    /// Invoked right before the popover is shown on screen
+    ///
+    /// - Parameter popover: the @class MTPopover object that is controlling the popover
+    @objc optional func popoverWillShow(_ popover: MTPopover)
+
+    /// Invoked right after the popover is shown on screen
+    ///
+    /// - Parameter popover: the @class MTPopover object that is controlling the popover
+    @objc optional func popoverDidShow(_ popover: MTPopover)
+
+    /// Invoked right before the popover closes
+    ///
+    /// - Parameter popover: the @class MTPopover object that is controlling the popover
+    @objc optional func popoverWillClose(_ popover: MTPopover)
+
+    /// Invoked right after the popover closed
+    ///
+    /// - Parameter popover: the @class MTPopover object that is controlling the popover
+    @objc optional func popoverDidClose(_ popover: MTPopover)
 }
