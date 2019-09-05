@@ -146,6 +146,38 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     /// - Parameters:
     ///   - relativeTo: the rect in the positionView from which to display the popover
     ///   - of: the view that the popover is positioned relative to
+    ///   - preferredEdge: the prefered edge at which the arrow will point.
+    ///     There is no guarantee that this will be the actual arrow direction,
+    ///     depending on whether the screen is able to accomodate the popover in that position.
+    ///   - anchors: whether the popover binds to the frame of the positionView.
+    ///     This means that if the positionView is resized or moved, the popover will be repositioned
+    ///     according to the point at which it was originally placed.
+    ///     This also means that if the positionView goes off screen, the popover will be automatically closed.
+    ///     Default value: YES
+    public func show(relativeTo rect: NSRect,
+                     of positionView: NSView,
+                     preferredEdge: NSRectEdge,
+                     anchorsToPositionView anchors: Bool = true) {
+        
+        var preferredArrowDirection: MTPopoverArrowDirection = .undefined
+        
+        switch preferredEdge {
+        case .minX: preferredArrowDirection = .right
+        case .maxX: preferredArrowDirection = .left
+        case .maxY: preferredArrowDirection = .down
+        case .minY: preferredArrowDirection = .up
+        @unknown default:
+            preferredArrowDirection = .left
+        }
+        
+        show(relativeTo: rect, of: positionView, preferredArrowDirection: preferredArrowDirection, anchorsToPositionView: anchors)
+    }
+    
+    /// Displays the popover.
+    ///
+    /// - Parameters:
+    ///   - relativeTo: the rect in the positionView from which to display the popover
+    ///   - of: the view that the popover is positioned relative to
     ///   - preferredArrowDirection: the prefered direction at which the arrow will point.
     ///     There is no guarantee that this will be the actual arrow direction,
     ///     depending on whether the screen is able to accomodate the popover in that position.

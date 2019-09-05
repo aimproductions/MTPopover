@@ -52,6 +52,8 @@ class ViewController: NSViewController, MTPopoverDelegate {
             popoverController.performClose()
         } else {
             popoverController.show(relativeTo: (sender as! NSView).bounds, of: sender as! NSView, preferredArrowDirection: .down, anchorsToPositionView: true)
+            // NOTE: The next example is equal in functionality
+            // popoverController.show(relativeTo: (sender as! NSView).bounds, of: sender as! NSView, preferredEdge: .maxY, anchorsToPositionView: true)
         }
     }
 
