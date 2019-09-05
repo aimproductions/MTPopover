@@ -253,7 +253,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     
     /// Closes the popover unless NO is returned for the -popoverShouldClose: delegate method
     ///
-    /// - Note that the popup must be closed (either manually or automatically) before its reference can be released
+    /// - Note that the popover must be closed (either manually or automatically) before its reference can be released
     ///
     /// - Parameter sender: the object that sent this message
     @IBAction public func performClose(_ sender: Any = NSNull()) {
@@ -283,7 +283,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     
     /// Closes the popover regardless of what the delegate returns
     ///
-    /// - Note that the popup must be closed (either manually or automatically) before its reference can be released
+    /// - Note that the popover must be closed (either manually or automatically) before its reference can be released
     ///
     /// - Parameter sender: the object that sent this message
     @IBAction public func close(_ sender: Any = NSNull()) {

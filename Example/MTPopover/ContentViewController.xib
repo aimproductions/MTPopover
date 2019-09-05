@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="ContentViewController" customModule="INPopoverControllerSwift" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="ContentViewController" customModule="MTPopover_Example" customModuleProvider="target">
             <connections>
                 <outlet property="view" destination="1" id="3"/>
             </connections>
@@ -13,11 +14,11 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="1">
-            <rect key="frame" x="0.0" y="0.0" width="87" height="204"/>
+            <rect key="frame" x="0.0" y="0.0" width="160" height="204"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="6">
-                    <rect key="frame" x="0.0" y="0.0" width="87" height="161"/>
+                    <rect key="frame" x="20" y="20" width="120" height="161"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="161" id="pOW-cI-SK1"/>
                     </constraints>
@@ -29,11 +30,11 @@
                 </textField>
             </subviews>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="6" secondAttribute="bottom" id="7Km-Kj-jT2"/>
-                <constraint firstItem="6" firstAttribute="width" secondItem="1" secondAttribute="width" id="8Gu-If-d14"/>
-                <constraint firstItem="6" firstAttribute="leading" secondItem="1" secondAttribute="leading" id="Lyl-Pl-OmW"/>
+                <constraint firstItem="6" firstAttribute="leading" secondItem="1" secondAttribute="leading" constant="20" id="Lyl-Pl-OmW"/>
+                <constraint firstAttribute="bottom" secondItem="6" secondAttribute="bottom" constant="20" id="Z8A-Vp-K1U"/>
+                <constraint firstAttribute="trailing" secondItem="6" secondAttribute="trailing" constant="20" id="k2f-ch-YEC"/>
             </constraints>
-            <point key="canvasLocation" x="-59.5" y="166"/>
+            <point key="canvasLocation" x="-23" y="166"/>
         </customView>
     </objects>
 </document>
