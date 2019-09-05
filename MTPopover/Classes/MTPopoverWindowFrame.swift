@@ -73,7 +73,7 @@ public class MTPopoverWindowFrame: NSView {
     }
 
     // MARK: -
-    // MARK: Public functions
+    // MARK: Public
     
     override public func draw(_ dirtyRect: NSRect) {
         var bounds = self.bounds
@@ -82,7 +82,7 @@ public class MTPopoverWindowFrame: NSView {
             bounds = bounds.insetBy(dx: 0.5, dy: 0.5)
         }
         
-        let path = _popoverBezierPath(with: bounds)
+        let path = popoverBezierPath(with: bounds)
         if color != nil {
             color?.set()
             path?.fill()
@@ -114,7 +114,8 @@ public class MTPopoverWindowFrame: NSView {
     
     // MARK: -
     // MARK: Private
-    func _popoverBezierPath(with aRect: NSRect) -> NSBezierPath? {
+    
+    private func popoverBezierPath(with aRect: NSRect) -> NSBezierPath? {
         let radius = cornerRadius
         let arrowWidth = arrowSize.width
         let arrowHeight = arrowSize.height
