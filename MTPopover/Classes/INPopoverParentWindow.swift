@@ -11,7 +11,7 @@
 
 import Cocoa
 
-class INPopoverParentWindow: NSWindow {
+public class INPopoverParentWindow: NSWindow {
     @objc func isReallyKeyWindow() -> Bool {
         return super.isKeyWindow
     }

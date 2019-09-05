@@ -6,7 +6,7 @@
 
 import Cocoa
 
-class INPopoverController: NSObject, CAAnimationDelegate {
+public class INPopoverController: NSObject, CAAnimationDelegate {
     private var screenRect = NSRect.zero
     private var viewRect = NSRect.zero
 
@@ -18,7 +18,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
     //* The background color of the popover. Default value is [NSColor blackColor] with an alpha value of 0.8. Changes to this value are not animated. *
 
     private var _color: NSColor?
-    var color: NSColor? {
+    public var color: NSColor? {
         get {
             return popoverWindow?.frameView?.color
         }
@@ -29,7 +29,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
     //* Border color to use when drawing a border. Default value: [NSColor blackColor]. Changes to this value are not animated. *
 
     private var _borderColor: NSColor?
-    var borderColor: NSColor? {
+    public var borderColor: NSColor? {
         get {
             return popoverWindow?.frameView?.borderColor
         }
@@ -40,7 +40,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
     //* Color to use for drawing a 1px highlight just below the top. Can be nil. Changes to this value are not animated. *
 
     private var _topHighlightColor: NSColor?
-    var topHighlightColor: NSColor? {
+    public var topHighlightColor: NSColor? {
         get {
             return popoverWindow?.frameView?.topHighlightColor
         }
@@ -51,7 +51,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
     //* The width of the popover border, drawn using borderColor. Default value: 0.0 (no border). Changes to this value are not animated. *
 
     private var _borderWidth: CGFloat = 0.0
-    var borderWidth: CGFloat {
+    public var borderWidth: CGFloat {
         get {
             return popoverWindow?.frameView?.borderWidth ?? 0.0
         }
@@ -62,7 +62,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
     //* Corner radius of the popover window. Default value: 4. Changes to this value are not animated. *
 
     private var _cornerRadius: CGFloat = 0.0
-    var cornerRadius: CGFloat {
+    public var cornerRadius: CGFloat {
         get {
             return popoverWindow?.frameView?.cornerRadius ?? 0.0
         }
@@ -73,7 +73,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
     //* The size of the popover arrow. Default value: {23, 12}. Changes to this value are not animated. *
 
     private var _arrowSize = NSSize.zero
-    var arrowSize: NSSize {
+    public var arrowSize: NSSize {
         get {
             return popoverWindow?.frameView?.arrowSize ?? NSSize.zero
         }
@@ -84,13 +84,13 @@ class INPopoverController: NSObject, CAAnimationDelegate {
     //* The current arrow direction of the popover. If the popover has never been displayed, then this will return INPopoverArrowDirectionUndefined
 
     private var _arrowDirection: INPopoverArrowDirection!
-    var arrowDirection: INPopoverArrowDirection! {
+    public var arrowDirection: INPopoverArrowDirection! {
         return (popoverWindow?.frameView?.arrowDirection)!
     }
     //* The size of the content of the popover. This is automatically set to contentViewController's size when the view controller is set, but can be modified. Changes to this value are animated when animates is set to YES *
 
     private var _contentSize = NSSize.zero
-    var contentSize: NSSize {
+    public var contentSize: NSSize {
         get {
             return _contentSize
         }
@@ -102,16 +102,16 @@ class INPopoverController: NSObject, CAAnimationDelegate {
         }
     }
     //* Whether the popover closes when user presses escape key. Default value: YES
-    var closesWhenEscapeKeyPressed = false
+    public var closesWhenEscapeKeyPressed = false
     //* Whether the popover closes when the popover window resigns its key status. Default value: YES *
-    var closesWhenPopoverResignsKey = false
+    public var closesWhenPopoverResignsKey = false
     //* Whether the popover closes when the application becomes inactive. Default value: NO *
-    var closesWhenApplicationBecomesInactive = false
+    public var closesWhenApplicationBecomesInactive = false
     //* Enable or disable animation when showing/closing the popover and changing the content size. Default value: YES
-    var animates = false
+    public var animates = false
     /* If `animates` is `YES`, this is the animation type to use when showing/closing the popover.
        Default value: `INPopoverAnimationTypePop` **/
-    var animationType: INPopoverAnimationType!
+    public var animationType: INPopoverAnimationType!
     //* The content view controller from which content is displayed in the popover *
 
     private var _contentViewController: NSViewController?
@@ -135,12 +135,12 @@ class INPopoverController: NSObject, CAAnimationDelegate {
     private(set) var popoverWindow: INPopoverWindow?
     //* Whether the popover is currently visible or not *
 
-    var popoverIsVisible: Bool {
+    public var popoverIsVisible: Bool {
         return popoverWindow?.isVisible ?? false
     }
     //* Whether the window can become key or not. Default value: YES *
 
-    var windowCanBecomeKey: Bool {
+    public var windowCanBecomeKey: Bool {
         get {
             return popoverWindow?.canBecomeKeyWindowOverride ?? false
         }
@@ -157,7 +157,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
      @param viewController the content view controller
      @returns a new instance of INPopoverController
      */
-    init(contentViewController viewController: NSViewController?) {
+    public init(contentViewController viewController: NSViewController?) {
         super.init()
         
         _setInitialPropertyValues()
@@ -170,7 +170,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
      @param positionView the view that the popover is positioned relative to
      @param direction the prefered direction at which the arrow will point. There is no guarantee that this will be the actual arrow direction, depending on whether the screen is able to accomodate the popover in that position.
      @param anchors Whether the popover binds to the frame of the positionView. This means that if the positionView is resized or moved, the popover will be repositioned according to the point at which it was originally placed. This also means that if the positionView goes off screen, the popover will be automatically closed. **/
-    func presentPopover(from rect: NSRect, in positionView: NSView?, preferredArrowDirection direction: INPopoverArrowDirection, anchorsToPositionView anchors: Bool) {
+    public func presentPopover(from rect: NSRect, in positionView: NSView?, preferredArrowDirection direction: INPopoverArrowDirection, anchorsToPositionView anchors: Bool) {
         if popoverIsVisible {
             return
             // If it's already visible, do nothing
@@ -232,7 +232,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
      Closes the popover unless NO is returned for the -popoverShouldClose: delegate method 
      @param sender the object that sent this message
      */
-    @IBAction func closePopover(_ sender: Any) {
+    @IBAction public func closePopover(_ sender: Any) {
         if !(popoverWindow?.isVisible ?? false) {
             return
         }
@@ -256,7 +256,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
      Closes the popover regardless of what the delegate returns
      @param sender the object that sent this message
      */
-    @IBAction func forceClosePopover(_ sender: Any) {
+    @IBAction public func forceClosePopover(_ sender: Any) {
         if !(popoverWindow?.isVisible ?? false) {
             return
         }
@@ -313,7 +313,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
         _setInitialPropertyValues()
     }
 
-    override func awakeFromNib() {
+    override public func awakeFromNib() {
         super.awakeFromNib()
         _setInitialPropertyValues()
     }
@@ -328,7 +328,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
 // MARK: Public Methods
 
     // Calculate the frame of the window depending on the arrow direction
-    func animationDidStop(_ animation: CAAnimation, finished flag: Bool) {
+    public func animationDidStop(_ animation: CAAnimation, finished flag: Bool) {
 //#pragma unused(animation)
 //#pragma unused(flag)
         // Detect the end of fade out and close the window
@@ -500,7 +500,7 @@ class INPopoverController: NSObject, CAAnimationDelegate {
     }
 }
 
-@objc protocol INPopoverControllerDelegate: NSObjectProtocol {
+@objc public protocol INPopoverControllerDelegate: NSObjectProtocol {
     /**
      When the -closePopover: method is invoked, this method is called to give a change for the delegate to prevent it from closing. Returning NO for this delegate method will prevent the popover being closed. This delegate method does not apply to the -forceClosePopover: method, which will close the popover regardless of what the delegate returns.
      @param popover the @class INPopoverController object that is controlling the popover

@@ -12,7 +12,7 @@ import QuartzCore
  An NSWindow subclass used to draw a custom window frame (@class INPopoverWindowFrame)
  **/
 
-class INPopoverWindow: NSPanel, CAAnimationDelegate {
+public class INPopoverWindow: NSPanel, CAAnimationDelegate {
     private var zoomWindow: NSWindow?
 
     var frameView: INPopoverWindowFrame? {
@@ -50,7 +50,7 @@ class INPopoverWindow: NSPanel, CAAnimationDelegate {
     
     public var canBecomeKeyWindowOverride: Bool = false
     
-    override var canBecomeKey: Bool { return canBecomeKeyWindowOverride }
+    override public var canBecomeKey: Bool { return canBecomeKeyWindowOverride }
     
     //var canBecomeKeyWindow = false
 
@@ -91,27 +91,27 @@ class INPopoverWindow: NSPanel, CAAnimationDelegate {
     }
 
     // Leave some space around the content for drawing the arrow
-    override func contentRect(forFrameRect windowFrame: NSRect) -> NSRect {
+    override public func contentRect(forFrameRect windowFrame: NSRect) -> NSRect {
         var windowFrame = windowFrame
         windowFrame.origin = NSPoint.zero
         let arrowHeight = frameView?.arrowSize.height
         return windowFrame.insetBy(dx: arrowHeight ?? 0.0, dy: arrowHeight ?? 0.0)
     }
 
-    override func frameRect(forContentRect contentRect: NSRect) -> NSRect {
+    override public func frameRect(forContentRect contentRect: NSRect) -> NSRect {
         let arrowHeight = frameView?.arrowSize.height
         return contentRect.insetBy(dx: -(arrowHeight ?? 0.0), dy: -(arrowHeight ?? 0.0))
     }
 
-    override var canBecomeMain: Bool {
+    override public var canBecomeMain: Bool {
         return false
     }
 
-    override var isVisible: Bool {
+    override public var isVisible: Bool {
         return super.isVisible || zoomWindow?.isVisible ?? false
     }
 
-    override var contentView: NSView? {
+    override public var contentView: NSView? {
         get {
             return super.contentView
         }
@@ -155,7 +155,7 @@ class INPopoverWindow: NSPanel, CAAnimationDelegate {
         animator().alphaValue = 1.0
     }
 
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+    public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         alphaValue = 1.0
         makeKeyAndOrderFront(self)
         zoomWindow?.close()
@@ -166,7 +166,7 @@ class INPopoverWindow: NSPanel, CAAnimationDelegate {
         windowAnimation?.delegate?.animationDidStop?(anim, finished: flag)
     }
 
-    override func cancelOperation(_ sender: Any?) {
+    override public func cancelOperation(_ sender: Any?) {
         guard let popoverController = popoverController else { return }
         
         if popoverController.closesWhenEscapeKeyPressed {

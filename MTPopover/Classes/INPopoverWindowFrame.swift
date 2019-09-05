@@ -11,7 +11,7 @@ import Cocoa
  The NSView subclass responsible for drawing the frame of the popover
  */
 
-class INPopoverWindowFrame: NSView {
+public class INPopoverWindowFrame: NSView {
     private var _color: NSColor?
     var color: NSColor? {
         get {
@@ -101,7 +101,7 @@ class INPopoverWindowFrame: NSView {
         arrowDirection = .left
     }
 
-    override func draw(_ dirtyRect: NSRect) {
+    override public func draw(_ dirtyRect: NSRect) {
         var bounds = self.bounds
         if (Int(borderWidth) % 2) == 1 {
             // Remove draw glitch on odd border width

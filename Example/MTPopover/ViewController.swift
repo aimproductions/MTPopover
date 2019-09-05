@@ -7,20 +7,37 @@
 //
 
 import Cocoa
+import MTPopover
 
 class ViewController: NSViewController {
-
-  override func viewDidLoad() {
-    super.viewDidLoad()
-
-    // Do any additional setup after loading the view.
-  }
-
-  override var representedObject: Any? {
-    didSet {
-    // Update the view, if already loaded.
+    private var popoverController: INPopoverController!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
-  }
+    
+    @IBAction func onButtonPressed(_ sender: Any) {
+        
+        
+        if popoverController == nil {
+            
+            let viewController = ContentViewController(nibName: "ContentViewController", bundle: nil)
+            popoverController = INPopoverController(contentViewController: viewController)
+            
+            popoverController.cornerRadius = 10
+            //popoverController.borderWidth = 0
+            //popoverController.arrowSize = NSSize.zero
+            popoverController.animationType = .fadeInOut
+            popoverController.closesWhenApplicationBecomesInactive = true
+            popoverController.closesWhenEscapeKeyPressed = true
+        }
+        
+        if popoverController.popoverIsVisible {
+            popoverController.closePopover(sender)
+        } else {
+            popoverController.presentPopover(from: (sender as! NSView).bounds, in: sender as! NSView, preferredArrowDirection: .down, anchorsToPositionView: true)
+        }
+    }
 
 
 }

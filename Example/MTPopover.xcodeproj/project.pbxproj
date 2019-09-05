@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22B7985A2320F28400E679C9 /* ContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B798582320F28300E679C9 /* ContentViewController.swift */; };
+		22B7985B2320F28400E679C9 /* ContentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22B798592320F28400E679C9 /* ContentViewController.xib */; };
 		3F275EDE13A2E8ABEDCCE931 /* Pods_MTPopover_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E34B0F4A011C0C1C37167DF1 /* Pods_MTPopover_Example.framework */; };
 		ED83F67C20348A760038D96B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED83F67B20348A760038D96B /* AppDelegate.swift */; };
 		ED83F67E20348A760038D96B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED83F67D20348A760038D96B /* ViewController.swift */; };
@@ -28,6 +30,8 @@
 
 /* Begin PBXFileReference section */
 		07ECF20285D8807942C70FFB /* Pods-MTPopover_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MTPopover_Tests.release.xcconfig"; path = "Target Support Files/Pods-MTPopover_Tests/Pods-MTPopover_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		22B798582320F28300E679C9 /* ContentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentViewController.swift; sourceTree = "<group>"; };
+		22B798592320F28400E679C9 /* ContentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ContentViewController.xib; sourceTree = "<group>"; };
 		3570D3F594BE2DE1A4A53873 /* Pods-MTPopover_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MTPopover_Example.release.xcconfig"; path = "Target Support Files/Pods-MTPopover_Example/Pods-MTPopover_Example.release.xcconfig"; sourceTree = "<group>"; };
 		77005C801352479BB9817B7E /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		7EA21AB9BCAB62DB77486B3C /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
@@ -118,6 +122,8 @@
 				ED83F68120348A760038D96B /* Main.storyboard */,
 				ED83F68420348A760038D96B /* Info.plist */,
 				ED83F68520348A760038D96B /* MTPopover.entitlements */,
+				22B798582320F28300E679C9 /* ContentViewController.swift */,
+				22B798592320F28400E679C9 /* ContentViewController.xib */,
 			);
 			path = MTPopover;
 			sourceTree = "<group>";
@@ -229,6 +235,7 @@
 			files = (
 				ED83F68020348A760038D96B /* Assets.xcassets in Resources */,
 				ED83F68320348A760038D96B /* Main.storyboard in Resources */,
+				22B7985B2320F28400E679C9 /* ContentViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED83F67E20348A760038D96B /* ViewController.swift in Sources */,
+				22B7985A2320F28400E679C9 /* ContentViewController.swift in Sources */,
 				ED83F67C20348A760038D96B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

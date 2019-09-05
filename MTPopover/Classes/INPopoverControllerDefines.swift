@@ -4,7 +4,7 @@
 //  Copyright 2011-2014 Indragie Karunaratne. All rights reserved.
 //
 
-enum INPopoverArrowDirection : Int {
+public enum INPopoverArrowDirection : Int {
     case undefined = 0
     case left = 1
     case right = 2
@@ -14,7 +14,7 @@ enum INPopoverArrowDirection : Int {
     case upRight = 101
 }
 
-enum INPopoverAnimationType : Int {
+public enum INPopoverAnimationType : Int {
     case pop = 0 // Pop animation similar to NSPopover
     case fadeIn // Fade in only, no fade out
     case fadeOut // Fade out only, no fade in
