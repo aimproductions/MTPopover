@@ -248,7 +248,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
             close = delegate?.popoverShouldClose?(self) ?? false
         }
         if close {
-            forceClosePopover(sender ?? self)
+            forceClosePopover(sender)
         }
     }
     
@@ -494,7 +494,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
         if delegate?.responds(to: selector) ?? false {
             //#pragma clang diagnostic push
             //#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            delegate?.perform(selector, with: self)
+            _ = delegate?.perform(selector, with: self)
             //#pragma clang diagnostic pop
         }
     }

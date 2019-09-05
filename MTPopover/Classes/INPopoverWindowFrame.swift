@@ -125,7 +125,7 @@ public class INPopoverWindowFrame: NSView {
         
         if topHighlightColor != nil {
             topHighlightColor?.set()
-            var bounds = self.bounds.insetBy(dx: arrowHeight, dy: arrowHeight)
+            let bounds = self.bounds.insetBy(dx: arrowHeight, dy: arrowHeight)
             let lineRect = NSRect(x: floor(bounds.minX + (radius / 2.0)), y: bounds.maxY - borderWidth - 1, width: bounds.width - radius, height: 1.0)
             
             if arrowDirection == .up {
