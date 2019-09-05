@@ -6,7 +6,7 @@
 
 import Cocoa
 
-public class INPopoverController: NSObject, CAAnimationDelegate {
+public class MTPopover: NSObject, CAAnimationDelegate {
     private var screenRect = NSRect.zero
     private var viewRect = NSRect.zero
     
@@ -132,7 +132,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
     //* The view that the currently displayed popover is positioned relative to. If there is no popover being displayed, this returns nil. *
     private(set) var positionView: NSView?
     //* The window of the popover *
-    private(set) var popoverWindow: INPopoverWindow?
+    private(set) var popoverWindow: MTPopoverWindow?
     //* Whether the popover is currently visible or not *
     
     public var popoverIsVisible: Bool {
@@ -350,11 +350,11 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
     }
     
     @objc func checkPopoverKeyWindowStatus() {
-        let parentWindow = positionView?.window // could be INPopoverParentWindow
+        let parentWindow = positionView?.window // could be MTPopoverParentWindow
         
         var isKey = false
         
-        if let popoverParentWindow = parentWindow as? INPopoverParentWindow {
+        if let popoverParentWindow = parentWindow as? MTPopoverParentWindow {
             isKey = popoverParentWindow.isReallyKeyWindow()
         } else {
             isKey = parentWindow?.isKeyWindow ?? isKey
@@ -386,7 +386,7 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
     // Set the default values for all the properties as described in the header documentation
     func _setInitialPropertyValues() {
         // Create an empty popover window
-        popoverWindow = INPopoverWindow(contentRect: NSRect.zero, styleMask: .borderless, backing: .buffered, defer: false)
+        popoverWindow = MTPopoverWindow(contentRect: NSRect.zero, styleMask: .borderless, backing: .buffered, defer: false)
         popoverWindow?.popoverController = self
         
         // set defaults like iCal popover
@@ -506,25 +506,25 @@ public class INPopoverController: NSObject, CAAnimationDelegate {
      @param popover the @class INPopoverController object that is controlling the popover
      @returns whether the popover should close or not
      */
-    @objc optional func popoverShouldClose(_ popover: INPopoverController?) -> Bool
+    @objc optional func popoverShouldClose(_ popover: MTPopover?) -> Bool
     /**
      Invoked right before the popover shows on screen
      @param popover the @class INPopoverController object that is controlling the popover
      */
-    @objc optional func popoverWillShow(_ popover: INPopoverController?)
+    @objc optional func popoverWillShow(_ popover: MTPopover?)
     /**
      Invoked right after the popover shows on screen
      @param popover the @class INPopoverController object that is controlling the popover
      */
-    @objc optional func popoverDidShow(_ popover: INPopoverController?)
+    @objc optional func popoverDidShow(_ popover: MTPopover?)
     /**
      Invoked right before the popover closes
      @param popover the @class INPopoverController object that is controlling the popover
      */
-    @objc optional func popoverWillClose(_ popover: INPopoverController?)
+    @objc optional func popoverWillClose(_ popover: MTPopover?)
     /**
      Invoked right before the popover closes
      @param popover the @class INPopoverController object that is controlling the popover
      */
-    @objc optional func popoverDidClose(_ popover: INPopoverController?)
+    @objc optional func popoverDidClose(_ popover: MTPopover?)
 }

@@ -1,6 +1,6 @@
 //  Converted to Swift 5 by Swiftify v5.0.30657 - https://objectivec2swift.com/
 //
-//  INPopoverParentWindow.swift
+//  MTPopoverParentWindow.swift
 //  Copyright 2011-2014 Indragie Karunaratne. All rights reserved.
 //
 
@@ -11,7 +11,7 @@
 
 import Cocoa
 
-public class INPopoverParentWindow: NSWindow {
+public class MTPopoverParentWindow: NSWindow {
     @objc func isReallyKeyWindow() -> Bool {
         return super.isKeyWindow
     }
@@ -20,7 +20,7 @@ public class INPopoverParentWindow: NSWindow {
         var isKey = super.isKeyWindow
         if !isKey {
             for childWindow in childWindows ?? [] {
-                if (childWindow is INPopoverWindow) {
+                if (childWindow is MTPopoverWindow) {
                     // if we have popover attached, window is key if app is active
                     isKey = NSApp.isActive
                     break

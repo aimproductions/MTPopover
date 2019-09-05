@@ -10,7 +10,7 @@ import Cocoa
 import MTPopover
 
 class ViewController: NSViewController {
-    private var popoverController: INPopoverController!
+    private var popoverController: MTPopover!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +22,7 @@ class ViewController: NSViewController {
         if popoverController == nil {
             
             let viewController = ContentViewController(nibName: "ContentViewController", bundle: nil)
-            popoverController = INPopoverController(contentViewController: viewController)
+            popoverController = MTPopover(contentViewController: viewController)
             
             popoverController.cornerRadius = 10
             //popoverController.borderWidth = 0

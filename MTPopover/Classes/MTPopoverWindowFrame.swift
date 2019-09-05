@@ -11,7 +11,7 @@ import Cocoa
  The NSView subclass responsible for drawing the frame of the popover
  */
 
-public class INPopoverWindowFrame: NSView {
+public class MTPopoverWindowFrame: NSView {
     private var _color: NSColor?
     var color: NSColor? {
         get {

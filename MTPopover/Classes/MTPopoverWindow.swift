@@ -12,13 +12,13 @@ import QuartzCore
  An NSWindow subclass used to draw a custom window frame (@class INPopoverWindowFrame)
  **/
 
-public class INPopoverWindow: NSPanel, CAAnimationDelegate {
+public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
     private var zoomWindow: NSWindow?
     
-    var frameView: INPopoverWindowFrame? {
-        return contentView as? INPopoverWindowFrame
+    var frameView: MTPopoverWindowFrame? {
+        return contentView as? MTPopoverWindowFrame
     }
-    /* Equivalent to contentView */    var popoverController: INPopoverController?
+    /* Equivalent to contentView */    var popoverController: MTPopover?
     
     private var _popoverContentView: NSView?
     var popoverContentView: NSView? {
@@ -33,7 +33,7 @@ public class INPopoverWindow: NSPanel, CAAnimationDelegate {
             bounds.origin = NSPoint.zero
             var frameView = self.frameView
             if frameView == nil {
-                frameView = INPopoverWindowFrame(frame: bounds)
+                frameView = MTPopoverWindowFrame(frame: bounds)
                 super.contentView = frameView // Call on super or there will be infinite loop
             }
             if _popoverContentView != nil {
