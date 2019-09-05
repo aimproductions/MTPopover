@@ -154,12 +154,12 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     ///     This also means that if the positionView goes off screen, the popover will be automatically closed.
     ///     Default value: YES
     public func presentPopover(positioningRect rect: NSRect,
-                               of positionView: NSView?,
+                               of positionView: NSView,
                                preferredArrowDirection: MTPopoverArrowDirection,
                                anchorsToPositionView anchors: Bool = true) {
         guard !popoverIsVisible else { return } // If it's already visible, do nothing
         
-        guard let positionView = positionView, let mainWindow = positionView.window else {
+        guard let mainWindow = positionView.window else {
             return
         }
         
