@@ -63,7 +63,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     //* The current arrow direction of the popover. If the popover has never been displayed, then this will return INPopoverArrowDirectionUndefined
     
-    public var arrowDirection: INPopoverArrowDirection! {
+    public var arrowDirection: MTPopoverArrowDirection! {
         return (popoverWindow.frameView?.arrowDirection)!
     }
     //* The size of the content of the popover. This is automatically set to contentViewController's size when the view controller is set, but can be modified. Changes to this value are animated when animates is set to YES *
@@ -86,7 +86,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     public var animates = false
     /* If `animates` is `YES`, this is the animation type to use when showing/closing the popover.
      Default value: `INPopoverAnimationTypePop` **/
-    public var animationType: INPopoverAnimationType!
+    public var animationType: MTPopoverAnimationType!
     //* The content view controller from which content is displayed in the popover *
     
     private var _contentViewController: NSViewController?
@@ -118,10 +118,10 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     
     public var windowCanBecomeKey: Bool {
         get {
-            return popoverWindow.canBecomeKeyWindowOverride
+            return popoverWindow.windowCanBecomeKey
         }
         set(windowCanBecomeKey) {
-            popoverWindow.canBecomeKeyWindowOverride = windowCanBecomeKey
+            popoverWindow.windowCanBecomeKey = windowCanBecomeKey
         }
     }
     
@@ -146,7 +146,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
      @param positionView the view that the popover is positioned relative to
      @param direction the prefered direction at which the arrow will point. There is no guarantee that this will be the actual arrow direction, depending on whether the screen is able to accomodate the popover in that position.
      @param anchors Whether the popover binds to the frame of the positionView. This means that if the positionView is resized or moved, the popover will be repositioned according to the point at which it was originally placed. This also means that if the positionView goes off screen, the popover will be automatically closed. **/
-    public func presentPopover(from rect: NSRect, in positionView: NSView?, preferredArrowDirection direction: INPopoverArrowDirection, anchorsToPositionView anchors: Bool) {
+    public func presentPopover(from rect: NSRect, in positionView: NSView?, preferredArrowDirection direction: MTPopoverArrowDirection, anchorsToPositionView anchors: Bool) {
         if popoverIsVisible {
             return
             // If it's already visible, do nothing
@@ -249,7 +249,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
      @param contentSize the popover window content size
      @param direction the arrow direction
      */
-    func popoverFrame(with contentSize: NSSize, andArrowDirection direction: INPopoverArrowDirection) -> NSRect {
+    func popoverFrame(with contentSize: NSSize, andArrowDirection direction: MTPopoverArrowDirection) -> NSRect {
         var contentRect = NSRect.zero
         contentRect.size = contentSize
         var windowFrame = popoverWindow.frameRect(forContentRect: contentRect)
@@ -353,7 +353,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     // MARK: -
     // MARK: Private
         
-    private func setArrowDirection(_ direction: INPopoverArrowDirection) {
+    private func setArrowDirection(_ direction: MTPopoverArrowDirection) {
         popoverWindow.frameView?.arrowDirection = direction // UIMenuController.ArrowDirection(rawValue: direction.rawValue)
     }
     
@@ -379,7 +379,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     
     // Figure out which direction best stays in screen bounds
-    private func calculateArrowDirection(withPreferredArrowDirection direction: INPopoverArrowDirection) -> INPopoverArrowDirection {
+    private func calculateArrowDirection(withPreferredArrowDirection direction: MTPopoverArrowDirection) -> MTPopoverArrowDirection {
         let screenFrame = positionView?.window?.screen?.frame ?? NSZeroRect
         // If the window with the preferred arrow direction already falls within the screen bounds then no need to go any further
         var windowFrame = popoverFrame(with: contentSize, andArrowDirection: direction)
@@ -387,7 +387,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
             return direction
         }
         // First thing to try is making the popover go opposite of its current direction
-        var newDirection: INPopoverArrowDirection = .undefined
+        var newDirection: MTPopoverArrowDirection = .undefined
         switch direction {
         case .up:
             newDirection = .down

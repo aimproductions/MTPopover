@@ -1,7 +1,7 @@
 import Cocoa
 
 /**
- @class INPopoverWindowFrame
+ @class MPPopoverWindowFrame
  The NSView subclass responsible for drawing the frame of the popover
  */
 
@@ -49,7 +49,7 @@ public class MTPopoverWindowFrame: NSView {
         }
     }
     
-    var arrowDirection: INPopoverArrowDirection = .left {
+    var arrowDirection: MTPopoverArrowDirection = .left {
         didSet {
             guard oldValue != arrowDirection else { return }
             needsDisplay = true

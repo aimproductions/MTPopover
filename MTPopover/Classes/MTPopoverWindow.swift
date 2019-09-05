@@ -2,17 +2,17 @@ import AppKit
 import QuartzCore
 
 /** 
- @class INPopoverWindow
- An NSWindow subclass used to draw a custom window frame (@class INPopoverWindowFrame)
+ @class MTPopoverWindow
+ An NSWindow subclass used to draw a custom window frame (@class MTPopoverWindowFrame)
  **/
 
 public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
-    private var zoomWindow: NSWindow?
+    private var zoomWindow: NSWindow!
     
-    var frameView: MTPopoverWindowFrame? {
-        return contentView as? MTPopoverWindowFrame
-    }
-    /* Equivalent to contentView */    var popoverController: MTPopover?
+    var frameView: MTPopoverWindowFrame? { return contentView as? MTPopoverWindowFrame }
+    
+    /// Equivalent to contentView
+    var popoverController: MTPopover?
     
     private var _popoverContentView: NSView?
     var popoverContentView: NSView? {
@@ -30,8 +30,8 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
                 frameView = MTPopoverWindowFrame(frame: bounds)
                 super.contentView = frameView // Call on super or there will be infinite loop
             }
-            if _popoverContentView != nil {
-                _popoverContentView?.removeFromSuperview()
+            if let oldPopoverContentView = _popoverContentView {
+                oldPopoverContentView.removeFromSuperview()
             }
             _popoverContentView = aView
             _popoverContentView?.frame = contentRect(forFrameRect: bounds)
@@ -42,11 +42,10 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
         }
     }
     
-    public var canBecomeKeyWindowOverride: Bool = false
+    /// Defines if this window can become key or not
+    public var windowCanBecomeKey: Bool = false
     
-    override public var canBecomeKey: Bool { return canBecomeKeyWindowOverride }
-    
-    //var canBecomeKeyWindow = false
+    override public var canBecomeKey: Bool { return windowCanBecomeKey }
     
     func updateContentView() {
         var bounds = frame
@@ -81,7 +80,7 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
         isOpaque = false
         backgroundColor = NSColor.clear
         hasShadow = true
-        self.canBecomeKeyWindowOverride = true
+        self.windowCanBecomeKey = true
     }
     
     // Leave some space around the content for drawing the arrow
@@ -126,20 +125,20 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
         }
         
         zoomWindow = _zoom(with: startFrame ?? NSRect.zero)
-        zoomWindow?.alphaValue = 0.0
-        zoomWindow?.orderFront(self)
+        zoomWindow.alphaValue = 0.0
+        zoomWindow.orderFront(self)
         
         // configure bounce-out animation
         let anim = CAKeyframeAnimation()
         anim.delegate = self
         anim.values = [NSValue(rect: startFrame ?? NSRect.zero), NSValue(rect: overshootFrame ?? NSRect.zero), NSValue(rect: endFrame)]
-        zoomWindow?.animations = [
+        zoomWindow.animations = [
             "frame" : anim
         ]
         
         NSAnimationContext.beginGrouping()
-        zoomWindow?.animator().alphaValue = 1.0
-        zoomWindow?.animator().setFrame(endFrame, display: true)
+        zoomWindow.animator().alphaValue = 1.0
+        zoomWindow.animator().setFrame(endFrame, display: true)
         NSAnimationContext.endGrouping()
     }
     
@@ -152,7 +151,7 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
     public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         alphaValue = 1.0
         makeKeyAndOrderFront(self)
-        zoomWindow?.close()
+        zoomWindow.close()
         zoomWindow = nil
         
         // call the animation delegate of the "real" window

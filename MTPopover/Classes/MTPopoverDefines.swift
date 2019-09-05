@@ -1,4 +1,4 @@
-public enum INPopoverArrowDirection : Int {
+public enum MTPopoverArrowDirection : Int {
     case undefined = 0
     case left = 1
     case right = 2
@@ -8,7 +8,7 @@ public enum INPopoverArrowDirection : Int {
     case upRight = 101
 }
 
-public enum INPopoverAnimationType : Int {
+public enum MTPopoverAnimationType : Int {
     case pop = 0 // Pop animation similar to NSPopover
     case fadeIn // Fade in only, no fade out
     case fadeOut // Fade out only, no fade in
