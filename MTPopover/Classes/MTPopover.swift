@@ -11,7 +11,6 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     weak var delegate: INPopoverControllerDelegate?
     //* The background color of the popover. Default value is [NSColor blackColor] with an alpha value of 0.8. Changes to this value are not animated. *
     
-    private var _color: NSColor?
     public var color: NSColor? {
         get {
             return popoverWindow?.frameView?.color
@@ -22,7 +21,6 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     //* Border color to use when drawing a border. Default value: [NSColor blackColor]. Changes to this value are not animated. *
     
-    private var _borderColor: NSColor?
     public var borderColor: NSColor? {
         get {
             return popoverWindow?.frameView?.borderColor
@@ -33,7 +31,6 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     //* Color to use for drawing a 1px highlight just below the top. Can be nil. Changes to this value are not animated. *
     
-    private var _topHighlightColor: NSColor?
     public var topHighlightColor: NSColor? {
         get {
             return popoverWindow?.frameView?.topHighlightColor
@@ -44,7 +41,6 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     //* The width of the popover border, drawn using borderColor. Default value: 0.0 (no border). Changes to this value are not animated. *
     
-    private var _borderWidth: CGFloat = 0.0
     public var borderWidth: CGFloat {
         get {
             return popoverWindow?.frameView?.borderWidth ?? 0.0
@@ -55,7 +51,6 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     //* Corner radius of the popover window. Default value: 4. Changes to this value are not animated. *
     
-    private var _cornerRadius: CGFloat = 0.0
     public var cornerRadius: CGFloat {
         get {
             return popoverWindow?.frameView?.cornerRadius ?? 0.0
@@ -66,7 +61,6 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     //* The size of the popover arrow. Default value: {23, 12}. Changes to this value are not animated. *
     
-    private var _arrowSize = NSSize.zero
     public var arrowSize: NSSize {
         get {
             return popoverWindow?.frameView?.arrowSize ?? NSSize.zero
@@ -77,7 +71,6 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     //* The current arrow direction of the popover. If the popover has never been displayed, then this will return INPopoverArrowDirectionUndefined
     
-    private var _arrowDirection: INPopoverArrowDirection!
     public var arrowDirection: INPopoverArrowDirection! {
         return (popoverWindow?.frameView?.arrowDirection)!
     }
