@@ -13,16 +13,16 @@ import Cocoa
 
 class INPopoverParentWindow: NSWindow {
     @objc func isReallyKeyWindow() -> Bool {
-        return super.isKey()
+        return super.isKeyWindow
     }
 
     func isKeyWindow() -> Bool {
-        var isKey = super.isKey()
+        var isKey = super.isKeyWindow
         if !isKey {
             for childWindow in childWindows ?? [] {
                 if (childWindow is INPopoverWindow) {
                     // if we have popover attached, window is key if app is active
-                    isKey = NSApp.isActive()
+                    isKey = NSApp.isActive
                     break
                 }
             }

@@ -92,11 +92,13 @@ class INPopoverWindowFrame: NSView {
     }
 
     override init(frame: NSRect) {
-        super.init(frame: frame) != nil
-            color = NSColor(calibratedWhite: 0.0, alpha: 0.8)
-            cornerRadius = 4.0
-            arrowSize = NSMakeSize(23.0, 12.0)
-            arrowDirection = .left
+        
+        super.init(frame: frame)
+        
+        color = NSColor(calibratedWhite: 0.0, alpha: 0.8)
+        cornerRadius = 4.0
+        arrowSize = NSMakeSize(23.0, 12.0)
+        arrowDirection = .left
     }
 
     override func draw(_ dirtyRect: NSRect) {
@@ -150,23 +152,26 @@ class INPopoverWindowFrame: NSView {
         let maxY = drawingRect.maxY
 
         let path = NSBezierPath()
-        path.lineJoinStyle = NSRoundLineJoinStyle
+        path.lineJoinStyle = .round
 
         // Bottom left corner
         path.appendArc(withCenter: NSPoint(x: minX, y: minY), radius: radius, startAngle: 180.0, endAngle: 270.0)
         if arrowDirection == .down {
             let midX = drawingRect.midX
-            let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            let points = NSPointArray.allocate(capacity: 3)
+            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
             points[0] = NSPoint(x: floor(midX - (arrowWidth / 2.0)), y: minY - radius) // Starting point
             points[1] = NSPoint(x: floor(midX), y: points[0].y - arrowHeight) // Arrow tip
             points[2] = NSPoint(x: floor(midX + (arrowWidth / 2.0)), y: points[0].y) // Ending point
+            
             path.appendPoints(points, count: 3)
         }
         // Bottom right corner
         path.appendArc(withCenter: NSPoint(x: maxX, y: minY), radius: radius, startAngle: 270.0, endAngle: 360.0)
         if arrowDirection == .right {
             let midY = drawingRect.midY
-            let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            let points = NSPointArray.allocate(capacity: 3)
             points[0] = NSPoint(x: maxX + radius, y: floor(midY - (arrowWidth / 2.0)))
             points[1] = NSPoint(x: points[0].x + arrowHeight, y: floor(midY))
             points[2] = NSPoint(x: points[0].x, y: floor(midY + (arrowWidth / 2.0)))
@@ -176,21 +181,24 @@ class INPopoverWindowFrame: NSView {
         path.appendArc(withCenter: NSPoint(x: maxX, y: maxY), radius: radius, startAngle: 0.0, endAngle: 90.0)
         if arrowDirection == .up {
             let midX = drawingRect.midX
-            let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            let points = NSPointArray.allocate(capacity: 3)
             points[0] = NSPoint(x: floor(midX + (arrowWidth / 2.0)), y: maxY + radius)
             points[1] = NSPoint(x: floor(midX), y: points[0].y + arrowHeight)
             points[2] = NSPoint(x: floor(midX - (arrowWidth / 2.0)), y: points[0].y)
             path.appendPoints(points, count: 3)
         } else if arrowDirection == .upLeft {
             let arrowX = drawingRect.minX + arrowSize.width / 2 + 3
-            let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            let points = NSPointArray.allocate(capacity: 3)
             points[0] = NSPoint(x: floor(arrowX + (arrowWidth / 2.0)), y: maxY + radius)
             points[1] = NSPoint(x: floor(arrowX), y: points[0].y + arrowHeight)
             points[2] = NSPoint(x: floor(arrowX - (arrowWidth / 2.0)), y: points[0].y)
             path.appendPoints(points, count: 3)
         } else if arrowDirection == .upRight {
             let arrowX = drawingRect.maxX - arrowSize.width / 2 - 2
-            let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            let points = NSPointArray.allocate(capacity: 3)
             points[0] = NSPoint(x: floor(arrowX + (arrowWidth / 2.0)), y: maxY + radius)
             points[1] = NSPoint(x: floor(arrowX), y: points[0].y + arrowHeight)
             points[2] = NSPoint(x: floor(arrowX - (arrowWidth / 2.0)), y: points[0].y)
@@ -200,7 +208,8 @@ class INPopoverWindowFrame: NSView {
         path.appendArc(withCenter: NSPoint(x: minX, y: maxY), radius: radius, startAngle: 90.0, endAngle: 180.0)
         if arrowDirection == .left {
             let midY = drawingRect.midY
-            let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            let points = NSPointArray.allocate(capacity: 3)
             points[0] = NSPoint(x: minX - radius, y: floor(midY + (arrowWidth / 2.0)))
             points[1] = NSPoint(x: points[0].x - arrowHeight, y: floor(midY))
             points[2] = NSPoint(x: points[0].x, y: floor(midY - (arrowWidth / 2.0)))

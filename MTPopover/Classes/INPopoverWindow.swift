@@ -12,7 +12,7 @@ import QuartzCore
  An NSWindow subclass used to draw a custom window frame (@class INPopoverWindowFrame)
  **/
 
-class INPopoverWindow: NSPanel {
+class INPopoverWindow: NSPanel, CAAnimationDelegate {
     private var zoomWindow: NSWindow?
 
     var frameView: INPopoverWindowFrame? {
@@ -47,7 +47,12 @@ class INPopoverWindow: NSPanel {
             }
         }
     }
-    var canBecomeKeyWindow = false
+    
+    public var canBecomeKeyWindowOverride: Bool = false
+    
+    override var canBecomeKey: Bool { return canBecomeKeyWindowOverride }
+    
+    //var canBecomeKeyWindow = false
 
     func updateContentView() {
         var bounds = frame
@@ -71,17 +76,18 @@ class INPopoverWindow: NSPanel {
     }
 
     func dismissAnimated() {
-        zoomWindow?.animator()?.alphaValue = 0.0 // in case zoom window is currently animating
+        zoomWindow?.animator().alphaValue = 0.0 // in case zoom window is currently animating
         animator().alphaValue = 0.0
     }
 
     // Borderless, transparent window
     override init(contentRect: NSRect, styleMask windowStyle: NSWindow.StyleMask, backing bufferingType: NSWindow.BackingStoreType, defer deferCreation: Bool) {
-        super.init(contentRect: contentRect, styleMask: NSNonactivatingPanelMask, backing: bufferingType, defer: deferCreation) != nil
-            isOpaque = false
-            backgroundColor = NSColor.clear
-            hasShadow = true
-            self.canBecomeKeyWindow = true
+        super.init(contentRect: contentRect, styleMask: NSWindow.StyleMask.nonactivatingPanel, backing: bufferingType, defer: deferCreation)
+    
+        isOpaque = false
+        backgroundColor = NSColor.clear
+        hasShadow = true
+        self.canBecomeKeyWindowOverride = true
     }
 
     // Leave some space around the content for drawing the arrow
@@ -122,7 +128,7 @@ class INPopoverWindow: NSPanel {
         }
         var overshootFrame: NSRect? = nil
         if let arrowDirection = frameView?.arrowDirection {
-            overshootFrame = popoverController?.popoverFrame(with: NSMakeSize(Double(endFrame.size.width) * OVERSHOOT_FACTOR, Double(endFrame.size.height) * OVERSHOOT_FACTOR), andArrowDirection: arrowDirection)
+            overshootFrame = popoverController?.popoverFrame(with: NSMakeSize(CGFloat(Double(endFrame.size.width) * OVERSHOOT_FACTOR), CGFloat(Double(endFrame.size.height) * OVERSHOOT_FACTOR)), andArrowDirection: arrowDirection)
         }
 
         zoomWindow = _zoom(with: startFrame ?? NSRect.zero)
@@ -138,8 +144,8 @@ class INPopoverWindow: NSPanel {
         ]
 
         NSAnimationContext.beginGrouping()
-        zoomWindow?.animator()?.alphaValue = 1.0
-        zoomWindow?.animator()?.setFrame(endFrame, display: true)
+        zoomWindow?.animator().alphaValue = 1.0
+        zoomWindow?.animator().setFrame(endFrame, display: true)
         NSAnimationContext.endGrouping()
     }
 
@@ -161,8 +167,11 @@ class INPopoverWindow: NSPanel {
     }
 
     override func cancelOperation(_ sender: Any?) {
-        if popoverController?.closesWhenEscapeKeyPressed ?? false {
-            popoverController?.closePopover(nil)
+        guard let popoverController = popoverController else { return }
+        
+        if popoverController.closesWhenEscapeKeyPressed {
+            
+            popoverController.closePopover(sender ?? self)
         }
     }
 
@@ -173,7 +182,7 @@ class INPopoverWindow: NSPanel {
     // <https://github.com/MrNoodle/NoodleKit/blob/master/NSWindow-NoodleEffects.m>
     //  Copyright 2007-2009 Noodlesoft, LLC. All rights reserved.
     func _zoom(with rect: NSRect) -> NSWindow? {
-        let isOneShot = self.isOneShot()
+        let isOneShot = self.isOneShot
         if isOneShot {
             self.isOneShot = false
         }
@@ -201,7 +210,7 @@ class INPopoverWindow: NSPanel {
         }
 
         // create zoom window
-        let zoomWindow = NSWindow(contentRect: rect, styleMask: NSBorderlessWindowMask, backing: .buffered, defer: false)
+        let zoomWindow = NSWindow(contentRect: rect, styleMask: NSWindow.StyleMask.borderless, backing: .buffered, defer: false)
         zoomWindow.backgroundColor = NSColor.clear
         zoomWindow.hasShadow = hasShadow
         zoomWindow.level = level
@@ -220,10 +229,6 @@ class INPopoverWindow: NSPanel {
         self.isOneShot = isOneShot
 
         return zoomWindow
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
     }
 }
 

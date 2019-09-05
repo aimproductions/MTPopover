@@ -6,10 +6,10 @@
 
 enum INPopoverArrowDirection : Int {
     case undefined = 0
-    case left = []
-    case right = []
-    case up = []
-    case down = []
+    case left = 1
+    case right = 2
+    case up = 3
+    case down = 4
     case upLeft = 100
     case upRight = 101
 }

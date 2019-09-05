@@ -6,7 +6,7 @@
 
 import Cocoa
 
-class INPopoverController: NSObject {
+class INPopoverController: NSObject, CAAnimationDelegate {
     private var screenRect = NSRect.zero
     private var viewRect = NSRect.zero
 
@@ -20,10 +20,10 @@ class INPopoverController: NSObject {
     private var _color: NSColor?
     var color: NSColor? {
         get {
-            return popoverWindow?.frameView._color
+            return popoverWindow?.frameView?.color
         }
         set(newColor) {
-            popoverWindow?.frameView._color = newColor
+            popoverWindow?.frameView?.color = newColor
         }
     }
     //* Border color to use when drawing a border. Default value: [NSColor blackColor]. Changes to this value are not animated. *
@@ -31,10 +31,10 @@ class INPopoverController: NSObject {
     private var _borderColor: NSColor?
     var borderColor: NSColor? {
         get {
-            return popoverWindow?.frameView._borderColor
+            return popoverWindow?.frameView?.borderColor
         }
         set(newBorderColor) {
-            popoverWindow?.frameView._borderColor = newBorderColor
+            popoverWindow?.frameView?.borderColor = newBorderColor
         }
     }
     //* Color to use for drawing a 1px highlight just below the top. Can be nil. Changes to this value are not animated. *
@@ -42,10 +42,10 @@ class INPopoverController: NSObject {
     private var _topHighlightColor: NSColor?
     var topHighlightColor: NSColor? {
         get {
-            return popoverWindow?.frameView._topHighlightColor
+            return popoverWindow?.frameView?.topHighlightColor
         }
         set(newTopHighlightColor) {
-            popoverWindow?.frameView._topHighlightColor = newTopHighlightColor
+            popoverWindow?.frameView?.topHighlightColor = newTopHighlightColor
         }
     }
     //* The width of the popover border, drawn using borderColor. Default value: 0.0 (no border). Changes to this value are not animated. *
@@ -53,10 +53,10 @@ class INPopoverController: NSObject {
     private var _borderWidth: CGFloat = 0.0
     var borderWidth: CGFloat {
         get {
-            return popoverWindow?.frameView._borderWidth ?? 0.0
+            return popoverWindow?.frameView?.borderWidth ?? 0.0
         }
         set(newBorderWidth) {
-            popoverWindow?.frameView._borderWidth = newBorderWidth
+            popoverWindow?.frameView?.borderWidth = newBorderWidth
         }
     }
     //* Corner radius of the popover window. Default value: 4. Changes to this value are not animated. *
@@ -64,10 +64,10 @@ class INPopoverController: NSObject {
     private var _cornerRadius: CGFloat = 0.0
     var cornerRadius: CGFloat {
         get {
-            return popoverWindow?.frameView._cornerRadius ?? 0.0
+            return popoverWindow?.frameView?.cornerRadius ?? 0.0
         }
         set(cornerRadius) {
-            popoverWindow?.frameView.cornerRadius = cornerRadius
+            popoverWindow?.frameView?.cornerRadius = cornerRadius
         }
     }
     //* The size of the popover arrow. Default value: {23, 12}. Changes to this value are not animated. *
@@ -75,17 +75,17 @@ class INPopoverController: NSObject {
     private var _arrowSize = NSSize.zero
     var arrowSize: NSSize {
         get {
-            return popoverWindow?.frameView._arrowSize ?? NSSize.zero
+            return popoverWindow?.frameView?.arrowSize ?? NSSize.zero
         }
         set(arrowSize) {
-            popoverWindow?.frameView.arrowSize = arrowSize
+            popoverWindow?.frameView?.arrowSize = arrowSize
         }
     }
     //* The current arrow direction of the popover. If the popover has never been displayed, then this will return INPopoverArrowDirectionUndefined
 
     private var _arrowDirection: INPopoverArrowDirection!
     var arrowDirection: INPopoverArrowDirection! {
-        return (popoverWindow?.frameView._arrowDirection)!
+        return (popoverWindow?.frameView?.arrowDirection)!
     }
     //* The size of the content of the popover. This is automatically set to contentViewController's size when the view controller is set, but can be modified. Changes to this value are animated when animates is set to YES *
 
@@ -121,18 +121,18 @@ class INPopoverController: NSObject {
         }
         set(newContentViewController) {
             if _contentViewController != newContentViewController {
-                popoverWindow?.setPopoverContentView(nil) // Clear the content view
+                popoverWindow?.popoverContentView = nil// Clear the content view
                 _contentViewController = newContentViewController
                 let contentView = _contentViewController?.view
                 contentSize = contentView?.frame.size ?? NSSize.zero
-                popoverWindow?.setPopoverContentView(contentView)
+                popoverWindow?.popoverContentView = contentView
             }
         }
     }
     //* The view that the currently displayed popover is positioned relative to. If there is no popover being displayed, this returns nil. *
     private(set) var positionView: NSView?
     //* The window of the popover *
-    private(set) var popoverWindow: NSWindow?
+    private(set) var popoverWindow: INPopoverWindow?
     //* Whether the popover is currently visible or not *
 
     var popoverIsVisible: Bool {
@@ -142,10 +142,10 @@ class INPopoverController: NSObject {
 
     var windowCanBecomeKey: Bool {
         get {
-            return popoverWindow?.canBecomeKey ?? false
+            return popoverWindow?.canBecomeKeyWindowOverride ?? false
         }
         set(windowCanBecomeKey) {
-            popoverWindow?.canBecomeKey = windowCanBecomeKey
+            popoverWindow?.canBecomeKeyWindowOverride = windowCanBecomeKey
         }
     }
 
@@ -158,9 +158,10 @@ class INPopoverController: NSObject {
      @returns a new instance of INPopoverController
      */
     init(contentViewController viewController: NSViewController?) {
-        super.init() != nil
-            _setInitialPropertyValues()
-            contentViewController = viewController
+        super.init()
+        
+        _setInitialPropertyValues()
+        contentViewController = viewController
     }
 
     /**
@@ -174,11 +175,14 @@ class INPopoverController: NSObject {
             return
             // If it's already visible, do nothing
         }
-        let mainWindow = positionView?.window
+        guard let positionView = positionView, let mainWindow = positionView.window else {
+            return
+        }
+        //let mainWindow = positionView!.window
         self.positionView = positionView
         viewRect = rect
-        screenRect = positionView?.convert(rect, to: nil) ?? NSRect.zero // Convert the rect to window coordinates
-        screenRect.origin = mainWindow?.convertToScreen(screenRect).origin // Convert window coordinates to screen coordinates
+        screenRect = positionView.convert(rect, to: nil)// ?? NSRect.zero // Convert the rect to window coordinates
+        screenRect.origin = mainWindow.convertToScreen(screenRect).origin // Convert window coordinates to screen coordinates
         let calculatedDirection = _arrowDirection(withPreferredArrowDirection: direction) // Calculate the best arrow direction
         _setArrowDirection(calculatedDirection) // Change the arrow direction of the popover
         let windowFrame = popoverFrame(with: contentSize, andArrowDirection: calculatedDirection) // Calculate the window frame based on the arrow direction
@@ -194,7 +198,7 @@ class INPopoverController: NSObject {
         } else {
             popoverWindow?.alphaValue = 1.0
             if let popoverWindow = popoverWindow {
-                mainWindow?.addChildWindow(popoverWindow, ordered: .above)
+                mainWindow.addChildWindow(popoverWindow, ordered: .above)
             } // Add the popover as a child window of the main window
             popoverWindow?.makeKeyAndOrderFront(nil) // Show the popover
             _callDelegateMethod(#selector(NSPopoverDelegate.popoverDidShow(_:))) // Call the delegate
@@ -209,7 +213,7 @@ class INPopoverController: NSObject {
         if closesWhenPopoverResignsKey {
             nc.addObserver(self, selector: #selector(closePopover(_:)), name: NSWindow.didResignKeyNotification, object: popoverWindow)
             if !closesWhenApplicationBecomesInactive {
-                nc.addObserver(self, selector: #selector(UIApplicationDelegate.applicationDidBecomeActive(_:)), name: NSApplication.didBecomeActiveNotification, object: nil)
+                nc.addObserver(self, selector: #selector(NSApplicationDelegate.applicationDidBecomeActive(_:)), name: NSApplication.didBecomeActiveNotification, object: nil)
             }
         } else if closesWhenApplicationBecomesInactive {
             // this is only needed if closesWhenPopoverResignsKey is NO, otherwise we already get a "resign key" notification when resigning active
@@ -232,9 +236,9 @@ class INPopoverController: NSObject {
         if !(popoverWindow?.isVisible ?? false) {
             return
         }
-        if (sender is Notification) && ((sender as? Notification)?.name).isEqual(toString: NSWindow.didResignKeyNotification) != nil {
+        if (sender is Notification) && ((sender as? Notification)?.name) == NSWindow.didResignKeyNotification/*.isEqual(toString: NSWindow.didResignKeyNotification) != nil*/ {
             // ignore "resign key" notification sent when app becomes inactive unless closesWhenApplicationBecomesInactive is enabled
-            if !closesWhenApplicationBecomesInactive && !NSApp.isActive() {
+            if !closesWhenApplicationBecomesInactive && !NSApp.isActive {
                 return
             }
         }
@@ -244,7 +248,7 @@ class INPopoverController: NSObject {
             close = delegate?.popoverShouldClose?(self) ?? false
         }
         if close {
-            forceClosePopover(nil)
+            forceClosePopover(sender ?? self)
         }
     }
 
@@ -305,8 +309,8 @@ class INPopoverController: NSObject {
 // MARK: -
 // MARK: Initialization
     override init() {
-        super.init() != nil
-            _setInitialPropertyValues()
+        super.init()
+        _setInitialPropertyValues()
     }
 
     override func awakeFromNib() {
@@ -347,8 +351,17 @@ class INPopoverController: NSObject {
 
     @objc func checkPopoverKeyWindowStatus() {
         let parentWindow = positionView?.window // could be INPopoverParentWindow
-        let isKey = parentWindow?.responds(to: #selector(INPopoverParentWindow.isReallyKeyWindow)) ?? false ? parentWindow?.isReallyKey() : parentWindow?.isKey()
-        if isKey ?? false {
+        
+        var isKey = false
+        
+        if let popoverParentWindow = parentWindow as? INPopoverParentWindow {
+            isKey = popoverParentWindow.isReallyKeyWindow()
+        } else {
+            isKey = parentWindow?.isKeyWindow ?? isKey
+        }
+        
+        //let isKey = parentWindow?.responds(to: #selector(INPopoverParentWindow.isReallyKeyWindow)) ?? false ? parentWindow?.isReallyKey() : parentWindow?.isKey()
+        if isKey /*?? false*/ {
             popoverWindow?.makeKey()
         }
     }
@@ -357,14 +370,14 @@ class INPopoverController: NSObject {
 // MARK: Getters
 
     func contentView() -> NSView? {
-        return popoverWindow?.popoverContentView()
+        return popoverWindow?.popoverContentView
     }
 
 // MARK: -
 // MARK: Setters
 
     func _setArrowDirection(_ direction: INPopoverArrowDirection) {
-        popoverWindow?.frameView.arrowDirection = UIMenuController.ArrowDirection(rawValue: direction.rawValue)
+        popoverWindow?.frameView?.arrowDirection = direction // UIMenuController.ArrowDirection(rawValue: direction.rawValue)
     }
 
 // MARK: -
@@ -373,7 +386,7 @@ class INPopoverController: NSObject {
     // Set the default values for all the properties as described in the header documentation
     func _setInitialPropertyValues() {
         // Create an empty popover window
-        popoverWindow = INPopoverWindow(contentRect: NSRect.zero, styleMask: NSBorderlessWindowMask, backing: .buffered, defer: false)
+        popoverWindow = INPopoverWindow(contentRect: NSRect.zero, styleMask: .borderless, backing: .buffered, defer: false)
         popoverWindow?.popoverController = self
 
         // set defaults like iCal popover
@@ -393,7 +406,7 @@ class INPopoverController: NSObject {
 
     // Figure out which direction best stays in screen bounds
     func _arrowDirection(withPreferredArrowDirection direction: INPopoverArrowDirection) -> INPopoverArrowDirection {
-        let screenFrame = positionView?.window?.screen?.frame
+        let screenFrame = positionView?.window?.screen?.frame ?? NSZeroRect
         // If the window with the preferred arrow direction already falls within the screen bounds then no need to go any further
         var windowFrame = popoverFrame(with: contentSize, andArrowDirection: direction)
         if NSContainsRect(screenFrame, windowFrame) {
@@ -420,8 +433,8 @@ class INPopoverController: NSObject {
         }
         // Calculate the remaining space on each side and figure out which would be the best to try next
         let `left` = screenRect.minX
-        let `right` = (screenFrame?.size.width ?? 0.0) - screenRect.maxX
-        let up = (screenFrame?.size.height ?? 0.0) - screenRect.maxY
+        let `right` = screenFrame.size.width - screenRect.maxX
+        let up = screenFrame.size.height - screenRect.maxY
         let down = screenRect.minY
         let arrowLeft = `right` > `left`
         let arrowUp = down > up
@@ -444,14 +457,14 @@ class INPopoverController: NSObject {
     }
 
     @objc func _positionViewBoundsChanged(_ notification: Notification?) {
-        let superviewBounds = positionView?.superview?.bounds
-        if !(NSContainsRect(superviewBounds, positionView?.frame)) {
-            forceClosePopover(nil) // If the position view goes off screen then close the popover
+        let superviewBounds = positionView?.superview?.bounds ?? NSZeroRect
+        if !(NSContainsRect(superviewBounds, positionView?.frame ?? NSZeroRect)) {
+            forceClosePopover(self) // If the position view goes off screen then close the popover
             return
         }
-        let newFrame = popoverWindow?.frame
+        var newFrame = popoverWindow?.frame
         screenRect = positionView?.convert(viewRect, to: nil) ?? NSRect.zero // Convert the rect to window coordinates
-        screenRect.origin = positionView?.window?.convertToScreen(screenRect).origin // Convert window coordinates to screen coordinates
+        screenRect.origin = positionView?.window?.convertToScreen(screenRect).origin ?? screenRect.origin // Convert window coordinates to screen coordinates
         let calculatedFrame = popoverFrame(with: contentSize, andArrowDirection: arrowDirection) // Calculate the window frame based on the arrow direction
         newFrame?.origin = calculatedFrame.origin
         popoverWindow?.setFrame(newFrame ?? NSRect.zero, display: true, animate: false) // Set the frame of the window
@@ -473,7 +486,8 @@ class INPopoverController: NSObject {
         viewRect = NSRect.zero
 
         // When using ARC and no animation, there is a "message sent to deallocated instance" crash if setDelegate: is not performed at the end of the event.
-        popoverWindow?.animation(forKey: "alphaValue")?.perform(#selector(setDelegate(_:)), with: nil, afterDelay: 0)
+        // popoverWindow?.animation(forKey: "alphaValue")?.perform(#selector(setDelegate(_:)), with: nil, afterDelay: 0)
+        (popoverWindow?.animation(forKey: "alphaValue") as? CAAnimation)?.delegate = nil
     }
 
     func _callDelegateMethod(_ selector: Selector) {
@@ -492,7 +506,7 @@ class INPopoverController: NSObject {
      @param popover the @class INPopoverController object that is controlling the popover
      @returns whether the popover should close or not
      */
-    @objc optional func popoverShouldClose(_ popover: NSPopover) -> Bool
+    @objc optional func popoverShouldClose(_ popover: INPopoverController?) -> Bool
     /**
      Invoked right before the popover shows on screen
      @param popover the @class INPopoverController object that is controlling the popover
