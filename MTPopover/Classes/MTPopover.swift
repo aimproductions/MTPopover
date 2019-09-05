@@ -323,8 +323,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     
     // Calculate the frame of the window depending on the arrow direction
     public func animationDidStop(_ animation: CAAnimation, finished flag: Bool) {
-        //#pragma unused(animation)
-        //#pragma unused(flag)
+
         // Detect the end of fade out and close the window
         if 0.0 == popoverWindow.alphaValue {
             closePopoverAndResetVariables()
@@ -337,13 +336,14 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     
     @objc func applicationDidBecomeActive(_ notification: Notification) {
-        // when the user clicks in the parent window for activating the app, the parent window becomes key which prevents 
-        if popoverWindow.isVisible {
-            perform(#selector(checkPopoverKeyWindowStatus), with: nil, afterDelay: 0)
-        }
+        guard popoverWindow.isVisible else { return }
+        
+        // when the user clicks in the parent window for activating the app,
+        // the parent window becomes key which prevents the popover window from being key
+        perform(#selector(checkPopoverKeyWindowStatus), with: nil, afterDelay: 0)
     }
     
-    @objc func checkPopoverKeyWindowStatus() {
+    @objc private func checkPopoverKeyWindowStatus() {
         let parentWindow = positionView?.window // could be MTPopoverParentWindow
         
         var isKey = false
@@ -492,14 +492,9 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     ///
     /// - Parameter selector: selector to try call
     private func callDelegateMethod(_ selector: Selector) {
-        guard let delegate = delegate else { return }
+        guard let delegate = delegate, delegate.responds(to: selector) else { return }
         
-        if delegate.responds(to: selector) {
-            //#pragma clang diagnostic push
-            //#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            _ = delegate.perform(selector, with: self)
-            //#pragma clang diagnostic pop
-        }
+        _ = delegate.perform(selector, with: self)
     }
 }
 
