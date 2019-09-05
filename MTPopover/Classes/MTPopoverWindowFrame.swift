@@ -6,7 +6,12 @@ import Cocoa
  */
 
 public class MTPopoverWindowFrame: NSView {
-
+    
+    // MARK: -
+    // MARK: Accessors
+    
+    // Redraw the frame every time a property is changed
+    
     var color: NSColor? = NSColor(calibratedWhite: 0.0, alpha: 0.8) {
         didSet {
             guard oldValue != color else { return }
@@ -56,10 +61,19 @@ public class MTPopoverWindowFrame: NSView {
         }
     }
     
+    // MARK: -
+    // MARK: Initializer
+    
     override init(frame: NSRect) {
-        
         super.init(frame: frame)
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    // MARK: -
+    // MARK: Public functions
     
     override public func draw(_ dirtyRect: NSRect) {
         var bounds = self.bounds
@@ -115,6 +129,7 @@ public class MTPopoverWindowFrame: NSView {
         guard !minX.isNaN && !minX.isInfinite && !minY.isNaN && !minY.isInfinite else { return nil }
         
         let path = NSBezierPath()
+        
         path.lineJoinStyle = .round
         
         // Bottom left corner
@@ -122,72 +137,72 @@ public class MTPopoverWindowFrame: NSView {
         if arrowDirection == .down {
             let midX = drawingRect.midX
             let points = NSPointArray.allocate(capacity: 3)
-            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
+            
             points[0] = NSPoint(x: floor(midX - (arrowWidth / 2.0)), y: minY - radius) // Starting point
             points[1] = NSPoint(x: floor(midX), y: points[0].y - arrowHeight) // Arrow tip
             points[2] = NSPoint(x: floor(midX + (arrowWidth / 2.0)), y: points[0].y) // Ending point
             
             path.appendPoints(points, count: 3)
         }
+        
         // Bottom right corner
         path.appendArc(withCenter: NSPoint(x: maxX, y: minY), radius: radius, startAngle: 270.0, endAngle: 360.0)
         if arrowDirection == .right {
             let midY = drawingRect.midY
-            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
             let points = NSPointArray.allocate(capacity: 3)
+            
             points[0] = NSPoint(x: maxX + radius, y: floor(midY - (arrowWidth / 2.0)))
             points[1] = NSPoint(x: points[0].x + arrowHeight, y: floor(midY))
             points[2] = NSPoint(x: points[0].x, y: floor(midY + (arrowWidth / 2.0)))
+            
             path.appendPoints(points, count: 3)
         }
+        
         // Top right corner
         path.appendArc(withCenter: NSPoint(x: maxX, y: maxY), radius: radius, startAngle: 0.0, endAngle: 90.0)
         if arrowDirection == .up {
             let midX = drawingRect.midX
-            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
             let points = NSPointArray.allocate(capacity: 3)
+            
             points[0] = NSPoint(x: floor(midX + (arrowWidth / 2.0)), y: maxY + radius)
             points[1] = NSPoint(x: floor(midX), y: points[0].y + arrowHeight)
             points[2] = NSPoint(x: floor(midX - (arrowWidth / 2.0)), y: points[0].y)
+            
             path.appendPoints(points, count: 3)
         } else if arrowDirection == .upLeft {
             let arrowX = drawingRect.minX + arrowSize.width / 2 + 3
-            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
             let points = NSPointArray.allocate(capacity: 3)
+            
             points[0] = NSPoint(x: floor(arrowX + (arrowWidth / 2.0)), y: maxY + radius)
             points[1] = NSPoint(x: floor(arrowX), y: points[0].y + arrowHeight)
             points[2] = NSPoint(x: floor(arrowX - (arrowWidth / 2.0)), y: points[0].y)
+            
             path.appendPoints(points, count: 3)
         } else if arrowDirection == .upRight {
             let arrowX = drawingRect.maxX - arrowSize.width / 2 - 2
-            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
             let points = NSPointArray.allocate(capacity: 3)
+            
             points[0] = NSPoint(x: floor(arrowX + (arrowWidth / 2.0)), y: maxY + radius)
             points[1] = NSPoint(x: floor(arrowX), y: points[0].y + arrowHeight)
             points[2] = NSPoint(x: floor(arrowX - (arrowWidth / 2.0)), y: points[0].y)
+            
             path.appendPoints(points, count: 3)
         }
+        
         // Top left corner
         path.appendArc(withCenter: NSPoint(x: minX, y: maxY), radius: radius, startAngle: 90.0, endAngle: 180.0)
         if arrowDirection == .left {
             let midY = drawingRect.midY
-            //let points = [NSPoint](repeating: NSPoint.zero, count: 3)
             let points = NSPointArray.allocate(capacity: 3)
+            
             points[0] = NSPoint(x: minX - radius, y: floor(midY + (arrowWidth / 2.0)))
             points[1] = NSPoint(x: points[0].x - arrowHeight, y: floor(midY))
             points[2] = NSPoint(x: points[0].x, y: floor(midY - (arrowWidth / 2.0)))
+            
             path.appendPoints(points, count: 3)
         }
         path.close()
         
         return path
-    }
-    
-    // MARK: -
-    // MARK: Accessors
-    
-    // Redraw the frame every time a property is changed
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
     }
 }
