@@ -86,13 +86,13 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
     override public func contentRect(forFrameRect windowFrame: NSRect) -> NSRect {
         var windowFrame = windowFrame
         windowFrame.origin = NSPoint.zero
-        let arrowHeight = frameView?.arrowSize.height
-        return windowFrame.insetBy(dx: arrowHeight ?? 0.0, dy: arrowHeight ?? 0.0)
+        let arrowHeight = frameView?.arrowSize.height ?? 0.0
+        return windowFrame.insetBy(dx: arrowHeight, dy: arrowHeight)
     }
     
     override public func frameRect(forContentRect contentRect: NSRect) -> NSRect {
-        let arrowHeight = frameView?.arrowSize.height
-        return contentRect.insetBy(dx: -(arrowHeight ?? 0.0), dy: -(arrowHeight ?? 0.0))
+        let arrowHeight = frameView?.arrowSize.height ?? 0.0
+        return contentRect.insetBy(dx: -arrowHeight, dy: -arrowHeight)
     }
     
     override public var canBecomeMain: Bool {
