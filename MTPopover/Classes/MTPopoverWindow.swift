@@ -43,7 +43,7 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
     }
     
     /// Defines if this window can become key or not
-    public var windowCanBecomeKey: Bool = false
+    public var windowCanBecomeKey: Bool = true
     
     override public var canBecomeKey: Bool { return windowCanBecomeKey }
     
@@ -80,7 +80,6 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
         isOpaque = false
         backgroundColor = NSColor.clear
         hasShadow = true
-        self.windowCanBecomeKey = true
     }
     
     // Leave some space around the content for drawing the arrow
