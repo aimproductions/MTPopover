@@ -77,9 +77,9 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     //* The size of the content of the popover. This is automatically set to contentViewController's size when the view controller is set, but can be modified. Changes to this value are animated when animates is set to YES *
     
     public var contentSize: NSSize = NSSize.zero {
-        didSet(newContentSize) {
+        didSet {
             // We use -frameRectForContentRect: just to get the frame size because the origin it returns is not the one we want to use. Instead, -windowFrameWithSize:andArrowDirection: is used to  complete the frame
-            let adjustedRect = popoverFrame(with: newContentSize, andArrowDirection: arrowDirection)
+            let adjustedRect = popoverFrame(with: contentSize, andArrowDirection: arrowDirection)
             popoverWindow.setFrame(adjustedRect, display: true, animate: animates)
         }
     }

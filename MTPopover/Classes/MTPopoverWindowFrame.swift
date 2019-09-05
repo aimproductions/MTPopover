@@ -33,14 +33,10 @@ public class MTPopoverWindowFrame: NSView {
     }
     var topHighlightColor: NSColor?
     
-    private var _borderWidth: CGFloat = 0.0
-    var borderWidth: CGFloat {
-        get {
-            return _borderWidth
-        }
-        set(newBorderWidth) {
-            if _borderWidth != newBorderWidth {
-                _borderWidth = newBorderWidth
+    var borderWidth: CGFloat = 0.0 {
+        didSet {
+            
+            if oldValue != borderWidth {
                 needsDisplay = true
             }
         }
