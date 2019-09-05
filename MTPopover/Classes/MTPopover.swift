@@ -91,10 +91,11 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     
     /// The content view controller from which content is displayed in the popover
     private var _contentViewController: NSViewController?
-    var contentViewController: NSViewController? {
+    public var contentViewController: NSViewController? {
         get {
             return _contentViewController
         }
+        // NOTE: I tried to change this logic to didSet but that triggered a BAD ACCESS crash..
         set(newContentViewController) {
             if _contentViewController != newContentViewController {
                 popoverWindow.popoverContentView = nil// Clear the content view
