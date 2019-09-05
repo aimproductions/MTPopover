@@ -12,7 +12,7 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
     var frameView: MTPopoverWindowFrame? { return contentView as? MTPopoverWindowFrame }
     
     /// Equivalent to contentView
-    var popoverController: MTPopover?
+    weak var popoverController: MTPopover?
     
     private var _popoverContentView: NSView?
     var popoverContentView: NSView? {
