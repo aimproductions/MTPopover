@@ -54,14 +54,14 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
     }
     
     func presentAnimated() {
-        if isVisible {
-            return
-        }
+        guard !isVisible else { return }
         
-        switch popoverController?.animationType {
-        case .pop?:
+        guard let popoverController = popoverController else { return }
+        
+        switch popoverController.animationType {
+        case .pop:
             presentWithPopAnimation()
-        case .fadeIn?, (.fadeInOut /* Fade in and out */)?:
+        case .fadeIn, .fadeInOut:
             presentWithFadeAnimation()
         default:
             break

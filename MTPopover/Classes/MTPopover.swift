@@ -84,7 +84,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     
     /// If `animates` is `YES`, this is the animation type to use when showing/closing the popover.
     /// Default value: `.pop`
-    public var animationType: MTPopoverAnimationType!
+    public var animationType: MTPopoverAnimationType = .pop
     
     /// The content view controller from which content is displayed in the popover
     private var _contentViewController: NSViewController?
@@ -142,9 +142,18 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     /// - Parameters:
     ///   - rect: the rect in the positionView from which to display the popover
     ///   - positionView: the view that the popover is positioned relative to
-    ///   - direction: the prefered direction at which the arrow will point. There is no guarantee that this will be the actual arrow direction, depending on whether the screen is able to accomodate the popover in that position.
-    ///   - anchors: whether the popover binds to the frame of the positionView. This means that if the positionView is resized or moved, the popover will be repositioned according to the point at which it was originally placed. This also means that if the positionView goes off screen, the popover will be automatically closed.
-    public func presentPopover(from rect: NSRect, in positionView: NSView?, preferredArrowDirection direction: MTPopoverArrowDirection, anchorsToPositionView anchors: Bool) {
+    ///   - preferredArrowDirection: the prefered direction at which the arrow will point.
+    ///     There is no guarantee that this will be the actual arrow direction,
+    ///     depending on whether the screen is able to accomodate the popover in that position.
+    ///   - anchors: whether the popover binds to the frame of the positionView.
+    ///     This means that if the positionView is resized or moved, the popover will be repositioned
+    ///     according to the point at which it was originally placed.
+    ///     This also means that if the positionView goes off screen, the popover will be automatically closed.
+    ///     Default value: YES
+    public func presentPopover(positioningRect rect: NSRect,
+                               of positionView: NSView?,
+                               preferredArrowDirection: MTPopoverArrowDirection,
+                               anchorsToPositionView anchors: Bool = true) {
         guard !popoverIsVisible else { return } // If it's already visible, do nothing
         
         guard let positionView = positionView, let mainWindow = positionView.window else {
@@ -155,7 +164,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         viewRect = rect
         screenRect = positionView.convert(rect, to: nil)// ?? NSRect.zero // Convert the rect to window coordinates
         screenRect.origin = mainWindow.convertToScreen(screenRect).origin // Convert window coordinates to screen coordinates
-        let calculatedDirection = calculateArrowDirection(withPreferredArrowDirection: direction) // Calculate the best arrow direction
+        let calculatedDirection = calculateArrowDirection(withPreferredArrowDirection: preferredArrowDirection) // Calculate the best arrow direction
         setArrowDirection(calculatedDirection) // Change the arrow direction of the popover
         let windowFrame = popoverFrame(with: contentSize, andArrowDirection: calculatedDirection) // Calculate the window frame based on the arrow direction
         popoverWindow.updateContentView()
@@ -180,6 +189,8 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         if anchors {
             // If the anchors option is enabled, register for bounds change notifications
             nc.addObserver(self, selector: #selector(positionViewBoundsChanged(_:)), name: NSView.boundsDidChangeNotification, object: self.positionView)
+            self.positionView?.postsFrameChangedNotifications = true
+            nc.addObserver(self, selector: #selector(positionViewBoundsChanged(_:)), name: NSView.frameDidChangeNotification, object: self.positionView)
         }
         // When -closesWhenPopoverResignsKey is set to YES, the popover will automatically close when the popover loses its key status
         if closesWhenPopoverResignsKey {
@@ -206,7 +217,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     @IBAction public func closePopover(_ sender: Any) {
         guard popoverWindow.isVisible else { return }
         
-        if (sender is Notification) && ((sender as? Notification)?.name) == NSWindow.didResignKeyNotification/*.isEqual(toString: NSWindow.didResignKeyNotification) != nil*/ {
+        if (sender is Notification) && ((sender as? Notification)?.name) == NSWindow.didResignKeyNotification {
             // ignore "resign key" notification sent when app becomes inactive unless closesWhenApplicationBecomesInactive is enabled
             if !closesWhenApplicationBecomesInactive && !NSApp.isActive {
                 return
