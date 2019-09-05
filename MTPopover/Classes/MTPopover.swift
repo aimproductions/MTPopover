@@ -4,6 +4,10 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     private var screenRect = NSRect.zero
     private var viewRect = NSRect.zero
     
+    /// Keeps track if the popover is already being closed
+    /// This is to prevent duplicate popoverWillClose callbacks
+    private var isClosing: Bool = false
+    
     // MARK: -
     // MARK: Properties
     
@@ -83,7 +87,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     public var closesWhenGoingOffscreen = true
     
     /// Enable or disable animation when showing/closing the popover and changing the content size. Default value: YES
-    public var animates = false
+    public var animates = true
     
     /// If `animates` is `YES`, this is the animation type to use when showing/closing the popover.
     /// Default value: `.pop`
@@ -257,7 +261,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     ///
     /// - Parameter sender: the object that sent this message
     @IBAction public func performClose(_ sender: Any = NSNull()) {
-        guard popoverWindow.isVisible else { return }
+        guard popoverWindow.isVisible && !isClosing else { return }
         
         if (sender is Notification) && ((sender as? Notification)?.name) == NSWindow.didResignKeyNotification {
             // ignore "resign key" notification sent when app becomes inactive unless closesWhenApplicationBecomesInactive is enabled
@@ -287,7 +291,9 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     ///
     /// - Parameter sender: the object that sent this message
     @IBAction public func close(_ sender: Any = NSNull()) {
-        guard popoverWindow.isVisible else { return }
+        guard popoverWindow.isVisible, !isClosing else { return }
+        
+        isClosing = true
         
         callDelegateMethod(#selector(NSPopoverDelegate.popoverWillClose(_:))) // Call delegate
         if animates && animationType != .fadeIn {
@@ -519,6 +525,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         positionView = nil
         screenRect = NSRect.zero
         viewRect = NSRect.zero
+        isClosing = false
         
         // When using ARC and no animation, there is a "message sent to deallocated instance" crash if setDelegate: is not performed at the end of the event.
         (popoverWindow.animation(forKey: "alphaValue") as? CAAnimation)?.delegate = nil
