@@ -7,7 +7,8 @@
 //
 
 import Foundation
+import AppKit
 
-class ContentViewController : ViewController {
+class ContentViewController : NSViewController {
     
 }
