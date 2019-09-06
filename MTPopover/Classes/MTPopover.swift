@@ -98,6 +98,9 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     /// Default value: `.pop`
     public var animationType: MTPopoverAnimationType = .pop
     
+    /// Optional offset added to the origin of the rect in the positionView when showing a popover
+    public var originOffset: CGPoint = CGPoint.zero
+    
     /// The content view controller from which content is displayed in the popover
     private var _contentViewController: NSViewController?
     public var contentViewController: NSViewController? {
@@ -207,7 +210,12 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         
         self.positionView = positionView
         viewRect = rect
-        screenRect = positionView.convert(rect, to: nil) // Convert the rect to window coordinates
+        
+        if originOffset != .zero {            
+            viewRect.origin = CGPoint(x: rect.origin.x + originOffset.x, y: rect.origin.y + originOffset.y)
+        }
+        
+        screenRect = positionView.convert(viewRect, to: nil) // Convert the rect to window coordinates
         screenRect.origin = mainWindow.convertToScreen(screenRect).origin // Convert window coordinates to screen coordinates
         let calculatedDirection = calculateArrowDirection(withPreferredArrowDirection: preferredArrowDirection) // Calculate the best arrow direction
         setArrowDirection(calculatedDirection) // Change the arrow direction of the popover
