@@ -10,7 +10,7 @@ import Cocoa
 import MTPopover
 
 class ViewController: NSViewController, MTPopoverDelegate {
-    private var popoverController: MTPopover!
+    private var popover: MTPopover!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +18,7 @@ class ViewController: NSViewController, MTPopoverDelegate {
     
     @IBAction func onDestroyPressed(_ sender: Any) {
         
-        guard let popoverController = popoverController else {
+        guard let popoverController = popover else {
             return
         }
         
@@ -26,40 +26,39 @@ class ViewController: NSViewController, MTPopoverDelegate {
             popoverController.close()
         }
         
-        self.popoverController = nil
+        self.popover = nil
     }
     
     @IBAction func onButtonPressed(_ sender: Any) {
         
         
-        if popoverController == nil {
+        if popover == nil {
             
             let viewController = ContentViewController(nibName: "ContentViewController", bundle: nil)
-            popoverController = MTPopover(contentViewController: viewController)
+            popover = MTPopover(contentViewController: viewController)
             
-            popoverController.cornerRadius = 0
-            popoverController.borderColor = NSColor.magenta
-            popoverController.borderWidth = 1
-            popoverController.arrowSize = NSSize.zero
-            popoverController.animationType = .fadeInOut
-            popoverController.closesWhenApplicationBecomesInactive = false
-            popoverController.closesWhenEscapeKeyPressed = false
-            popoverController.closesWhenPopoverResignsKey = false
-            popoverController.closesWhenGoingOffscreen = true
-            popoverController.delegate = self
-            // popoverController.topHighlightColor = NSColor.green
-            popoverController.originOffset = CGPoint(x: 0.0, y: 2)
-            popoverController.contentSize = CGSize(width: (sender as! NSButton).intrinsicContentSize.width - 2, height: popoverController.contentSize.height)
-          //  popoverController.
+            popover.cornerRadius = 0
+            popover.borderWidth = 0
+            popover.arrowSize = NSSize.zero
+            popover.animationType = .fadeInOut
+            popover.closesWhenApplicationBecomesInactive = false
+            popover.closesWhenEscapeKeyPressed = false
+            popover.closesWhenPopoverResignsKey = false
+            popover.closesWhenGoingOffscreen = true
+            popover.hasShadow = false
+            popover.delegate = self
+            popover.topHighlightColor = NSColor.green
+            popover.originOffset = CGPoint(x: 0.0, y: 2)
+            popover.contentSize = CGSize(width: (sender as! NSButton).intrinsicContentSize.width - 2, height: popover.contentSize.height)
         }
         
-        if popoverController.popoverIsVisible {
-            popoverController.performClose()
+        if popover.popoverIsVisible {
+            popover.performClose()
         } else {
             var bounds = (sender as! NSView).bounds
             bounds.origin = CGPoint(x: bounds.origin.x, y: bounds.origin.y + 2)
             
-            popoverController.show(relativeTo: bounds, of: sender as! NSView, preferredArrowDirection: .down, anchorsToPositionView: true)
+            popover.show(relativeTo: bounds, of: sender as! NSView, preferredArrowDirection: .down, anchorsToPositionView: true)
             
             // NOTE: The next example is equal in functionality
             // popoverController.show(relativeTo: bounds, of: sender as! NSView, preferredEdge: .maxY, anchorsToPositionView: true)

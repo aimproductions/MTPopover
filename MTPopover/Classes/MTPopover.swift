@@ -62,6 +62,14 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         return popoverWindow.frameView?.arrowDirection ?? .undefined
     }
     
+    /// Should the popover have a shadow.
+    /// Default value: YES
+    /// Changes to this value are not animated.
+    public var hasShadow: Bool {
+        get { return popoverWindow.hasShadow }
+        set { popoverWindow.hasShadow = newValue }
+    }
+    
     /// The size of the content of the popover.
     /// This is automatically set to contentViewController's size when the view controller is set, but can be modified.
     /// Changes to this value are animated when animates is set to YES
