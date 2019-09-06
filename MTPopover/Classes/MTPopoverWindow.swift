@@ -24,7 +24,7 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
                 return
             }
             var bounds = frame
-            bounds.origin = NSPoint.zero
+            bounds.origin = CGPoint.zero
             var frameView = self.frameView
             if frameView == nil {
                 frameView = MTPopoverWindowFrame(frame: bounds)
@@ -49,7 +49,7 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
     
     func updateContentView() {
         var bounds = frame
-        bounds.origin = NSPoint.zero
+        bounds.origin = CGPoint.zero
         popoverContentView?.frame = contentRect(forFrameRect: bounds)
     }
     
@@ -85,7 +85,7 @@ public class MTPopoverWindow: NSPanel, CAAnimationDelegate {
     // Leave some space around the content for drawing the arrow
     override public func contentRect(forFrameRect windowFrame: NSRect) -> NSRect {
         var windowFrame = windowFrame
-        windowFrame.origin = NSPoint.zero
+        windowFrame.origin = CGPoint.zero
         let arrowHeight = frameView?.arrowSize.height ?? 0.0
         return windowFrame.insetBy(dx: arrowHeight, dy: arrowHeight)
     }

@@ -211,7 +211,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         self.positionView = positionView
         viewRect = rect
         
-        if originOffset != .zero {            
+        if originOffset != .zero {
             viewRect.origin = CGPoint(x: rect.origin.x + originOffset.x, y: rect.origin.y + originOffset.y)
         }
         
@@ -329,25 +329,25 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         if direction == .up {
             let xOrigin = screenRect.midX - floor((windowFrame.size.width) / 2.0)
             let yOrigin = screenRect.minY - (windowFrame.size.height)
-            windowFrame.origin = NSPoint(x: xOrigin, y: yOrigin)
+            windowFrame.origin = CGPoint(x: xOrigin, y: yOrigin)
         } else if direction == .upLeft {
             let xOrigin = screenRect.minX - arrowSize.width + 2
             let yOrigin = screenRect.minY - (windowFrame.size.height)
-            windowFrame.origin = NSPoint(x: xOrigin, y: yOrigin)
+            windowFrame.origin = CGPoint(x: xOrigin, y: yOrigin)
         } else if direction == .upRight {
             let xOrigin = screenRect.maxX - (windowFrame.size.width) + arrowSize.width - 3
             let yOrigin = screenRect.minY - (windowFrame.size.height)
-            windowFrame.origin = NSPoint(x: xOrigin, y: yOrigin)
+            windowFrame.origin = CGPoint(x: xOrigin, y: yOrigin)
         } else if direction == .down {
             let xOrigin = screenRect.midX - floor((windowFrame.size.width) / 2.0)
-            windowFrame.origin = NSPoint(x: xOrigin, y: screenRect.maxY)
+            windowFrame.origin = CGPoint(x: xOrigin, y: screenRect.maxY)
         } else if direction == .left {
             let yOrigin = screenRect.midY - floor((windowFrame.size.height) / 2.0)
-            windowFrame.origin = NSPoint(x: screenRect.maxX, y: yOrigin)
+            windowFrame.origin = CGPoint(x: screenRect.maxX, y: yOrigin)
         } else if direction == .right {
             let xOrigin = screenRect.minX - (windowFrame.size.width)
             let yOrigin = screenRect.midY - floor((windowFrame.size.height) / 2.0)
-            windowFrame.origin = NSPoint(x: xOrigin, y: yOrigin)
+            windowFrame.origin = CGPoint(x: xOrigin, y: yOrigin)
         } else {
             // If no arrow direction is specified, just return an empty rect
             windowFrame = NSRect.zero
