@@ -50,7 +50,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     }
     
     /// The size of the popover arrow. Default value: {23, 12}.
-    /// Changes to this value are not animated. *
+    /// Changes to this value are not animated.
     public var arrowSize: NSSize {
         get { return popoverWindow.frameView?.arrowSize ?? NSSize.zero }
         set(arrowSize) {  popoverWindow.frameView?.arrowSize = arrowSize }
@@ -74,19 +74,24 @@ public class MTPopover: NSObject, CAAnimationDelegate {
         }
     }
     
-    /// Whether the popover closes when user presses escape key. Default value: YES
-    public var closesWhenEscapeKeyPressed = false
+    /// Whether the popover closes when user presses escape key.
+    /// Default value: YES
+    public var closesWhenEscapeKeyPressed = true
     
-    /// Whether the popover closes when the popover window resigns its key status. Default value: YES
-    public var closesWhenPopoverResignsKey = false
+    /// Whether the popover closes when the popover window resigns its key status.
+    /// Default value: YES
+    public var closesWhenPopoverResignsKey = true
     
-    /// Whether the popover closes when the application becomes inactive. Default value: NO
+    /// Whether the popover closes when the application becomes inactive.
+    /// Default value: NO
     public var closesWhenApplicationBecomesInactive = false
     
-    /// Whether the popover closes when the position view goes offscreen. Only relevant when the position is bound to the anchors. Default value: YES
+    /// Whether the popover closes when the position view goes offscreen. Only relevant when the position is bound to the anchors.
+    /// Default value: YES
     public var closesWhenGoingOffscreen = true
     
-    /// Enable or disable animation when showing/closing the popover and changing the content size. Default value: YES
+    /// Enable or disable animation when showing/closing the popover and changing the content size.
+    /// Default value: YES
     public var animates = true
     
     /// If `animates` is `YES`, this is the animation type to use when showing/closing the popover.
