@@ -37,8 +37,9 @@ class ViewController: NSViewController, MTPopoverDelegate {
             let viewController = ContentViewController(nibName: "ContentViewController", bundle: nil)
             popoverController = MTPopover(contentViewController: viewController)
             
-            popoverController.cornerRadius = 10
-            //popoverController.borderWidth = 0
+            popoverController.cornerRadius = 0
+            popoverController.borderColor = NSColor.magenta
+            popoverController.borderWidth = 1
             popoverController.arrowSize = NSSize.zero
             popoverController.animationType = .fadeInOut
             popoverController.closesWhenApplicationBecomesInactive = false
@@ -46,8 +47,9 @@ class ViewController: NSViewController, MTPopoverDelegate {
             popoverController.closesWhenPopoverResignsKey = false
             popoverController.closesWhenGoingOffscreen = true
             popoverController.delegate = self
-            popoverController.topHighlightColor = NSColor.green
-            popoverController.originOffset = CGPoint(x: 0.0, y: -20)
+            // popoverController.topHighlightColor = NSColor.green
+            popoverController.originOffset = CGPoint(x: 0.0, y: 2)
+            popoverController.contentSize = CGSize(width: (sender as! NSButton).intrinsicContentSize.width - 2, height: popoverController.contentSize.height)
           //  popoverController.
         }
         
@@ -58,6 +60,7 @@ class ViewController: NSViewController, MTPopoverDelegate {
             bounds.origin = CGPoint(x: bounds.origin.x, y: bounds.origin.y + 2)
             
             popoverController.show(relativeTo: bounds, of: sender as! NSView, preferredArrowDirection: .down, anchorsToPositionView: true)
+            
             // NOTE: The next example is equal in functionality
             // popoverController.show(relativeTo: bounds, of: sender as! NSView, preferredEdge: .maxY, anchorsToPositionView: true)
         }
