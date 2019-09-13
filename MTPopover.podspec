@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-A customizable NSPopover alternative for macOS written in Swift.
+A customizable NSPopover alternative for macOS written in Swift based on INPopoverController.
                        DESC
 
   s.homepage         = 'https://github.com/mylemans/MTPopover'
