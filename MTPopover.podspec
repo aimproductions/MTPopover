@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MTPopover'
-  s.version          = '0.1.0'
+  s.version          = '1.0.0'
   s.summary          = 'A customizable NSPopover alternative for macOS written in Swift.'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-A customizable NSPopover alternative for macOS written in Swift.
+A customizable NSPopover alternative for macOS written in Swift based on INPopoverController.
                        DESC
 
   s.homepage         = 'https://github.com/mylemans/MTPopover'
