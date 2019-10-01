@@ -440,7 +440,7 @@ public class MTPopover: NSObject, CAAnimationDelegate {
     // Set the default values for all the properties as described in the header documentation
     private func setInitialPropertyValues() {
         // Create an empty popover window
-        popoverWindow = MTPopoverWindow(contentRect: NSRect.zero, styleMask: .borderless, backing: .buffered, defer: false)
+        popoverWindow = MTPopoverWindow(contentRect: NSRect(x: 0, y: 0, width: 64, height: 64), styleMask: .borderless, backing: .buffered, defer: false)
         popoverWindow.popoverController = self
         
         // set defaults like iCal popover
